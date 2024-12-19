@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Matériels{% endblock %}
+
+{% block content %}
+
+<li><a href="{{ url_for('create_materiels_get') }}">Ajouter un Matériel</a></li>
+
+<h2>Liste des Matériels</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Prix Location Semaine</th>
+            <th>Quantité Disponible</th>
+            <th>Categorie</th>
+            <!-- Ajoutez d'autres colonnes si nécessaire -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for materiel in materiels %}
+        <tr>
+            <td>{{ materiel.numero_materiel }}</td>
+            <td>{{ materiel.nom_materiel }}<a href="{{ url_for('get_materiel', materiel_id=materiel.id_materiel) }}">Voir Détails</a></td>
+            <td>{{ materiel.description }}</td>
+            <td>{{ materiel.prix_location_semaine }}</td>
+            <td>{{ materiel.quantite_disponible }}</td>
+            <td>{{ materiel.categorie.name if materiel.categorie else 'N/A' }}</td>
+            <!-- Ajoutez d'autres colonnes si nécessaire -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock %}

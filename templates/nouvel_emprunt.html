@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Nouveau Emprunt{% endblock %}
+
+{% block content %}
+    <h2>Créer un nouvel emprunt</h2>
+    <form method="POST">
+        <label for="date_debut">Date de début :</label>
+        <input type="date" name="date_debut" required>
+
+        <label for="duree">Durée (semaines) :</label>
+        <input type="number" name="duree" required>
+
+        <label for="materiel">Matériel :</label>
+        <select name="materiel" required>
+            {% for materiel in materiels %}
+                <option value="{{ materiel.id_materiel }}">{{ materiel.nom_materiel }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="adherent">Adhérent :</label>
+        <select name="adherent" required>
+            {% for adherent in adherents %}
+                <option value="{{ adherent.id_adherent }}">{{ adherent.prenom }} {{ adherent.nom }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="remarques">Remarques :</label>
+        <textarea name="remarques"></textarea>
+
+        <button type="submit">Créer Emprunt</button>
+    </form>
+
+    <a href="{{ url_for('get_emprunts') }}">Retour à la liste des emprunts</a>
+{% endblock %}

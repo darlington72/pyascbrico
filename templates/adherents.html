@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Adherents{% endblock %}
+
+{% block content %}
+
+<li><a href="/adherents/add">Ajouter un Adherent</a></li>
+
+<div class="container">
+    <h1>Liste des Adhérents</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Statut</th>
+                <th>Téléphone</th>
+                <th>Adhésion depuis</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for adherent in adherents %}
+            <tr>
+                <td>{{ adherent.id_adherent }}</td>
+                <td>{{ adherent.nom }}</td>
+                <td>{{ adherent.prenom }}</td>
+                <td>{{ adherent.email }}</td>
+                <td>{{ adherent.statut.value }}</td>
+                <td>{{ adherent.telephone }}</td>
+                <td>{{ adherent.depuis }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

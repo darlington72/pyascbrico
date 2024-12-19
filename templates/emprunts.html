@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Emprunts{% endblock %}
+
+{% block content %}
+    <h2>Liste des Emprunts</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date de début</th>
+                <th>Durée</th>
+                <th>Matériel</th>
+                <th>Adhérent</th>
+                <th>Statut</th>
+                <th>Montant payé</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emprunt in emprunts %}
+                <tr>
+                    <td>{{ emprunt.id_emprunt }}</td>
+                    <td>{{ emprunt.date_debut }}</td>
+                    <td>{{ emprunt.duree }}</td>
+                    <td>{{ emprunt.materiel.nom_materiel }}</td>
+                    <td>{{ emprunt.adherent.prenom }} {{ emprunt.adherent.nom }}</td>
+                    <td>{{ emprunt.statut.value }}</td>
+                    <td>{{ emprunt.montant_paye }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('create_emprunt') }}">Créer un nouvel emprunt</a>
+
+    <div class="container">
+        <h1>Calendrier des Emprunts</h1>
+        <div id="calendar"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: [
+                    {% for emprunt in emprunts %}
+                    {
+                        title: '{{ emprunt.materiel.nom_materiel }}',
+                        start: '2024-11-01',//'{{ emprunt.date_debut }}', 
+                        end: '2024-11-04',//'{{ emprunt.date_debut }}'
+                    },
+                    {% endfor %}
+                ]
+            });
+            calendar.render();
+        });
+
+    </script>
+
+{% endblock %}

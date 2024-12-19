@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Détails du Matériel{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Détails du Matériel</h2>
+
+    <!-- Informations sur le Matériel -->
+    <div class="card mb-4">
+        <div class="card-header">
+            General
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Nom :</th>
+                        <td>{{ materiel.nom_materiel }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Numéro :</th>
+                        <td>{{ materiel.numero_materiel }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Prix Location Semaine :</th>
+                        <td>{{ materiel.prix_location_semaine }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">État :</th>
+                        <td>{{ materiel.etat.value }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Référence :</th>
+                        <td>{{ materiel.reference }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Marque :</th>
+                        <td>{{ materiel.marque }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Localisation :</th>
+                        <td>{{ materiel.localisation }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Accessoires Inclus :</th>
+                        <td>{{ materiel.accessoires_inclus }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Caractéristiques -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Caractéristiques
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Poids :</th>
+                        <td>{{ materiel.poids }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Dimensions :</th>
+                        <td>{{ materiel.dimensions }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Catégorie :</th>
+                        <td>{{ materiel.categorie.value }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Type d'Énergie :</th>
+                        <td>{{ materiel.type_energie.value }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Niveau danger :</th>
+                        <td>{{ materiel.niveau_danger }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Entretien -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Entretien
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Date de Vidange :</th>
+                        <td>{{ materiel.date_vidange }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Date d'Entretien :</th>
+                        <td>{{ materiel.date_entretien }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nombre d'Heures :</th>
+                        <td>{{ materiel.nb_heure }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Détails -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Détails
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Description :</th>
+                        <td>{{ materiel.description }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Sécurité :</th>
+                        <td>{{ materiel.securite }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Checklist :</th>
+                        <td>{{ materiel.checklist }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Lié à l'achat -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Lié à l'achat
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Date d'Achat :</th>
+                        <td>{{ materiel.date_achat }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">URL / Adresse achat :</th>
+                        <td>{{ materiel.lieu_achat }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Factue :</th>
+                        <td>
+                            {% if materiel.facture %}
+                                <a href="{{ url_for('static', filename=materiel.facture) }}" target="_blank" class="btn btn-link">Télécharger le document</a>
+                            {% else %}
+                                Aucun document joint
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Formulaire de suppression -->
+    <form action="{{ url_for('delete_materiel', materiel_id=materiel.id_materiel) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?');">
+        <button type="submit" class="btn btn-danger">Supprimer le Matériel</button>
+    </form>
+
+    <a href="{{ url_for('get_materiels') }}" class="btn btn-secondary mt-3">Retour à la liste des matériels</a>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Consommable{% endblock %}
+
+{% block content %}
+<h2>Liste des Consommables</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Prix</th>
+        <th>Actions</th>
+    </tr>
+    {% for consommable in consommables %}
+    <tr>
+        <td>{{ consommable.id_consommable }}</td>
+        <td>{{ consommable.nom_consommable }}</td>
+        <td>{{ consommable.prix }}</td>
+        <td>
+            <form action="{{ url_for('delete_consommable', id=consommable.id_consommable) }}" method="post" style="display:inline;">
+                <button type="submit">Supprimer</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Ajouter un Consommable</h3>
+<form action="{{ url_for('create_consommable') }}" method="post">
+    <input type="text" name="nom_consommable" placeholder="Nom" required>
+    <input type="number" name="prix" placeholder="Prix" required>
+    <button type="submit">Ajouter</button>
+</form>
+
+{% endblock %}

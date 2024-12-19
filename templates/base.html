@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mon Application{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #eef2f3; /* Couleur de fond douce et claire */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police moderne */
+            color: #333; /* Couleur de texte */
+        }
+        header {
+            background-color: #2C3E50; /* Couleur sombre moderne */
+            color: #ECF0F1; /* Texte clair */
+        }
+        footer {
+            background-color: #34495E; /* Couleur sombre du footer */
+            color: #ECF0F1; /* Texte clair */
+        }
+        .navbar {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre douce */
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem; /* Taille du texte du logo */
+        }
+        .alert {
+            margin-bottom: 20px;
+            border-radius: 5px; /* Coins arrondis pour les alertes */
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #3498DB; /* Couleur de bouton moderne */
+            border: none; /* Suppression du bord */
+        }
+        .btn-primary:hover {
+            background-color: #2980B9; /* Couleur de survol */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Mon Application</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="/materiels">Matériels</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/adherents">Adhérents</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/consommables">Consommables</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/emprunts">Emprunts</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-success">
+                    <ul class="list-unstyled">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center text-lg-start mt-5">
+        <div class="text-center p-3">
+            &copy; 2024 Mon Application
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
