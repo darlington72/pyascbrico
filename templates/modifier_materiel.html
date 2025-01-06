@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Détails de {{ materiel.numero_materiel }} {{ materiel.nom_materiel }} {% endblock %}
+
+{% block content %}
+
+    <form method="POST" enctype="multipart/form-data">
+        
+        <!-- Nom du matériel -->
+        <div class="form-group">
+            <label for="nom_materiel">Nom du matériel:</label>
+            <input type="text" name="nom_materiel" value="{{ materiel.nom_materiel }}" required>
+        </div>
+        
+        <!-- Numéro du matériel -->
+        <div class="form-group">
+            <label for="numero_materiel">Numéro du matériel:</label>
+            <input type="text" name="numero_materiel" value="{{ materiel.numero_materiel }}" required>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea name="description">{{ materiel.description }}</textarea>
+        </div>
+
+        <!-- Prix de location par semaine -->
+        <div class="form-group">
+            <label for="prix_location_semaine">Prix de location par semaine:</label>
+            <input type="number" name="prix_location_semaine" value="{{ materiel.prix_location_semaine }}" required>
+        </div>
+
+        <!-- Quantité disponible -->
+        <div class="form-group">
+            <label for="quantite_disponible">Quantité disponible:</label>
+            <input type="number" name="quantite_disponible" value="{{ materiel.quantite_disponible }}" required>
+        </div>
+
+        <!-- Catégorie -->
+        <div class="form-group">
+            <label for="categorie">Catégorie:</label>
+            <select name="categorie">
+                {% for category in categories %}
+                    <option value="{{ category }}" {% if category == materiel.categorie %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Niveau de danger -->
+        <div class="form-group">
+            <label for="niveau_danger">Niveau de danger:</label>
+            <input type="text" name="niveau_danger" value="{{ materiel.niveau_danger }}">
+        </div>
+
+        <!-- Poids -->
+        <div class="form-group">
+            <label for="poids">Poids (kg):</label>
+            <input type="number" name="poids" step="0.01" value="{{ materiel.poids }}">
+        </div>
+
+        <!-- Référence -->
+        <div class="form-group">
+            <label for="reference">Référence:</label>
+            <input type="text" name="reference" value="{{ materiel.reference }}">
+        </div>
+
+        <!-- Numéro de série -->
+        <div class="form-group">
+            <label for="num_serie">Numéro de série:</label>
+            <input type="text" name="num_serie" value="{{ materiel.num_serie }}">
+        </div>
+
+        <!-- Marque -->
+        <div class="form-group">
+            <label for="marque">Marque:</label>
+            <input type="text" name="marque" value="{{ materiel.marque }}">
+        </div>
+
+        <!-- Localisation -->
+        <div class="form-group">
+            <label for="localisation">Localisation:</label>
+            <input type="text" name="localisation" value="{{ materiel.localisation }}">
+        </div>
+
+        <!-- Lieu d'achat -->
+        <div class="form-group">
+            <label for="lieu_achat">Lieu d'achat:</label>
+            <input type="text" name="lieu_achat" value="{{ materiel.lieu_achat }}">
+        </div>
+
+        <!-- Type d'énergie -->
+        <div class="form-group">
+            <label for="type_energie">Type d'énergie:</label>
+            <select name="type_energie">
+                {% for type in typeenergies %}
+                    <option value="{{ type }}" {% if type == materiel.type_energie %}selected{% endif %}>{{ type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Dimensions -->
+        <div class="form-group">
+            <label for="dimensions">Dimensions (L x l x H):</label>
+            <input type="text" name="dimensions" value="{{ materiel.dimensions }}">
+        </div>
+
+        <!-- Accessoires inclus -->
+        <div class="form-group">
+            <label for="accessoires_inclus">Accessoires inclus:</label>
+            <input type="text" name="accessoires_inclus" value="{{ materiel.accessoires_inclus }}">
+        </div>
+
+        <!-- Sécurité -->
+        <div class="form-group">
+            <label for="securite">Sécurité:</label>
+            <input type="text" name="securite" value="{{ materiel.securite }}">
+        </div>
+
+        <!-- Facture -->
+        <div class="form-group">
+            <label for="facture">Facture (PDF, JPG, PNG, etc.):</label>
+            <input type="file" name="facture">
+        </div>
+
+        <!-- Manuel utilisateur -->
+        <div class="form-group">
+            <label for="manuel_user">Manuel utilisateur (PDF, DOC, etc.):</label>
+            <input type="file" name="manuel_user">
+        </div>
+
+        <!-- Vue éclatée -->
+        <div class="form-group">
+            <label for="vue_eclatee">Vue éclatée (PDF, JPG, PNG, etc.):</label>
+            <input type="file" name="vue_eclatee">
+        </div>
+
+        <!-- Date d'achat -->
+        <div class="form-group">
+            <label for="date_achat">Date d'achat:</label>
+            <input type="date" name="date_achat" value="{{ materiel.date_achat }}">
+        </div>
+
+        <!-- Date de vidange -->
+        <div class="form-group">
+            <label for="date_vidange">Date de vidange:</label>
+            <input type="date" name="date_vidange" value="{{ materiel.date_vidange }}">
+        </div>
+
+        <!-- Date d'entretien -->
+        <div class="form-group">
+            <label for="date_entretien">Date d'entretien:</label>
+            <input type="date" name="date_entretien" value="{{ materiel.date_entretien }}">
+        </div>
+
+        <!-- Bouton de soumission -->
+        <div class="form-group">
+            <input type="submit" value="Modifier le matériel">
+        </div>
+
+    </form>
+
+
+{% endblock %}

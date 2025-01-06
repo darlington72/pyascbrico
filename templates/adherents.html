@@ -4,11 +4,10 @@
 
 {% block content %}
 
-<li><a href="/adherents/add">Ajouter un Adherent</a></li>
-
 <div class="container">
-    <h1>Liste des Adhérents</h1>
-    <table class="table table-striped">
+
+    <!-- Tableau des matériels -->
+    <table id="materielTable" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>ID</th>
@@ -36,5 +35,28 @@
     </table>
 
 </div>
+
+<!-- Initialisation de DataTables -->
+<script>
+    $(document).ready(function() {
+        // Initialisation de DataTables
+        var table = $('#materielTable').DataTable({
+            "paging": true,           // Pagination activée
+            "searching": true,        // Recherche en temps réel activée
+            "ordering": true,         // Tri activé
+            "info": true,             // Affichage de l'information de pagination
+            "lengthMenu": [10, 25, 50, 100],  // Options de nombre d'éléments par page
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
+            }
+        });
+    });
+</script>
+
+</div>
+
+<a href="/adherents/add" class="btn btn-success">Ajouter un Adherent</a>
+
+<a href="/adherents/add" class="btn btn-success">Importer depuis CSV</a>
 
 {% endblock %}

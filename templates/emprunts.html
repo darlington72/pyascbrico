@@ -3,7 +3,37 @@
 {% block title %}Liste des Emprunts{% endblock %}
 
 {% block content %}
-    <h2>Liste des Emprunts</h2>
+
+
+<a href="{{ url_for('create_emprunt') }}" class="btn btn-success">Créer un nouvel emprunt</a>
+
+<h2>En cours</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date de début</th>
+            <th>Durée</th>
+            <th>Matériel</th>
+            <th>Adhérent</th>
+            <th>Retour</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for emprunt_en_cours in emprunts_en_cours %}
+            <tr>
+                <td>{{ emprunt_en_cours.id_emprunt }}</td>
+                <td>{{ emprunt_en_cours.date_debut }}</td>
+                <td>{{ emprunt_en_cours.duree }}</td>
+                <td>{{ emprunt_en_cours.materiel.nom_materiel }}</td>
+                <td>{{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</td>
+                <td><a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">Faire le retour</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    <h2>Historique</h2>
     <table>
         <thead>
             <tr>
@@ -12,50 +42,21 @@
                 <th>Durée</th>
                 <th>Matériel</th>
                 <th>Adhérent</th>
-                <th>Statut</th>
                 <th>Montant payé</th>
             </tr>
         </thead>
         <tbody>
-            {% for emprunt in emprunts %}
+            {% for emprunt_termine in emprunts_termine %}
                 <tr>
-                    <td>{{ emprunt.id_emprunt }}</td>
-                    <td>{{ emprunt.date_debut }}</td>
-                    <td>{{ emprunt.duree }}</td>
-                    <td>{{ emprunt.materiel.nom_materiel }}</td>
-                    <td>{{ emprunt.adherent.prenom }} {{ emprunt.adherent.nom }}</td>
-                    <td>{{ emprunt.statut.value }}</td>
-                    <td>{{ emprunt.montant_paye }}</td>
+                    <td>{{ emprunt_termine.id_emprunt }}</td>
+                    <td>{{ emprunt_termine.date_debut }}</td>
+                    <td>{{ emprunt_termine.duree }}</td>
+                    <td>{{ emprunt_termine.materiel.nom_materiel }}</td>
+                    <td>{{ emprunt_termine.adherent.prenom }} {{ emprunt_termine.adherent.nom }}</td>
+                    <td>{{ emprunt_termine.montant_paye }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ url_for('create_emprunt') }}">Créer un nouvel emprunt</a>
-
-    <div class="container">
-        <h1>Calendrier des Emprunts</h1>
-        <div id="calendar"></div>
-    </div>
-
-    <script>
-        $(document).ready(function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: [
-                    {% for emprunt in emprunts %}
-                    {
-                        title: '{{ emprunt.materiel.nom_materiel }}',
-                        start: '2024-11-01',//'{{ emprunt.date_debut }}', 
-                        end: '2024-11-04',//'{{ emprunt.date_debut }}'
-                    },
-                    {% endfor %}
-                ]
-            });
-            calendar.render();
-        });
-
-    </script>
 
 {% endblock %}

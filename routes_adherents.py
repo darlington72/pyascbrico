@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import app,db
 from models import Adherent
+from datetime import datetime
 
 @app.route('/adherents')
 def get_adherents():
@@ -16,7 +17,7 @@ def ajouter_adherent():
         statut = request.form['statut']
         telephone = request.form['telephone']
 
-        depuis_str = request.form.get('date_entretien')
+        depuis_str = request.form.get('depuis')
         depuis = datetime.strptime(depuis_str, '%Y-%m-%d').date() if depuis_str else None
 
         # Créez un nouvel objet Adherent

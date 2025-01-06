@@ -4,35 +4,72 @@
 
 {% block content %}
 
-<li><a href="{{ url_for('create_materiels_get') }}">Ajouter un Matériel</a></li>
 
-<h2>Liste des Matériels</h2>
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Description</th>
-            <th>Prix Location Semaine</th>
-            <th>Quantité Disponible</th>
-            <th>Categorie</th>
-            <!-- Ajoutez d'autres colonnes si nécessaire -->
-        </tr>
-    </thead>
-    <tbody>
-        {% for materiel in materiels %}
-        <tr>
-            <td>{{ materiel.numero_materiel }}</td>
-            <td>{{ materiel.nom_materiel }}<a href="{{ url_for('get_materiel', materiel_id=materiel.id_materiel) }}">Voir Détails</a></td>
-            <td>{{ materiel.description }}</td>
-            <td>{{ materiel.prix_location_semaine }}</td>
-            <td>{{ materiel.quantite_disponible }}</td>
-            <td>{{ materiel.categorie.name if materiel.categorie else 'N/A' }}</td>
-            <!-- Ajoutez d'autres colonnes si nécessaire -->
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container">
+
+    <!-- Filtre par catégorie -->
+    <div class="mb-3">
+        <label for="categoryFilter" class="form-label">Filtrer par catégorie :</label>
+        <select id="categoryFilter" class="form-select">
+            <option value="">Toutes les catégories</option>
+            {% for categorie in categories %}
+                <option value="{{ categorie.name }}">{{ categorie.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Tableau des matériels -->
+    <table id="materielTable" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Prix/sem</th>
+                <th>Categorie</th>
+                <!-- Ajoutez d'autres colonnes si nécessaire -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for materiel in materiels %}
+            <tr>
+                <td><a href="{{ url_for('get_materiel', numero_materiel=materiel.numero_materiel) }}">{{ materiel.numero_materiel }}</a></td>
+                <td>{{ materiel.nom_materiel }}</td>
+                <td>{{ materiel.description }}</td>
+                <td>{{ materiel.prix_location_semaine|round(2) }} €</td>
+                <td>{{ materiel.categorie.name if materiel.categorie else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Initialisation de DataTables -->
+<script>
+    $(document).ready(function() {
+        // Initialisation de DataTables
+        var table = $('#materielTable').DataTable({
+            "paging": true,           // Pagination activée
+            "searching": true,        // Recherche en temps réel activée
+            "ordering": true,         // Tri activé
+            "info": true,             // Affichage de l'information de pagination
+            "lengthMenu": [200,100,50],  // Options de nombre d'éléments par page
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
+            }
+        });
+
+        // Filtre par catégorie
+        $('#categoryFilter').on('change', function() {
+            var selectedCategory = this.value;
+            table.column(4).search(selectedCategory).draw();  // Filtrer par la colonne catégorie (colonne 4)
+        });
+    });
+</script>
+
+
+<a href="{{ url_for('create_materiels_get') }}" class="btn btn-success">Ajouter un Matériel</a>
 
 
 

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Retour de l'emprunt</h1>
+
+<p><strong>Matériel emprunté :</strong> {{ emprunt.materiel.nom_materiel }}</p>
+<p><strong>Adhérent :</strong> {{ emprunt.adherent.nom }} {{ emprunt.adherent.prenom }}</p>
+<p><strong>Date de début :</strong> {{ emprunt.date_debut }}</p>
+<p><strong>Durée réelle de l'emprunt :</strong> {{ emprunt.duree_reelle_en_semaines() }} semaines</p>
+<p><strong>Coût total de l'emprunt :</strong> {{ emprunt.cout_emprunt() }} €</p>
+
+{% if consommables %}
+    <p><strong>Consommables associés :</strong></p>
+    <ul>
+    {% for consommable in consommables %}
+        <li>{{ consommable.nom_consommable }} ({{ consommable.quantite_disponible }} disponibles) - Prix : {{ consommable.prix }} €</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucun consommable n'a été emprunté avec ce matériel.</p>
+{% endif %}
+
+<form method="POST">
+    <div class="form-group">
+        <label for="remarques">Remarques sur l'état du matériel :</label>
+        <textarea id="remarques" name="remarques" class="form-control" rows="4"></textarea>
+    </div>
+
+    <!-- Champ pour modifier le montant payé -->
+    <div class="form-group">
+        <label for="montant_paye">Montant payé :</label>
+        <input type="number" id="montant_paye" name="montant_paye" class="form-control" value="{{ emprunt.montant_paye }}" step="0.01" min="0" required>
+    </div>
+
+    <label for="type_paiement">Paiement par :</label>
+    <select id="type_paiement" name="type_paiement" required>
+        <option value="">Sélectionnez un type de paiement</option>
+        {% for type in type_paiement %}
+            <option value="{{ type }}">{{ type }}</option>
+        {% endfor %}
+    </select><br>
+
+    <button type="submit" class="btn btn-success">Confirmer le retour</button>
+</form>
+
+{% endblock %}

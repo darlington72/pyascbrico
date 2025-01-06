@@ -1,10 +1,50 @@
 {% extends "base.html" %}
 
-{% block title %}Détails du Matériel{% endblock %}
+{% block title %}Détails de {{ materiel.numero_materiel }} {{ materiel.nom_materiel }} {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Détails du Matériel</h2>
+    <h2 class="mb-4">Détails de n°{{ materiel.numero_materiel }} - {{ materiel.nom_materiel }}</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Emprunt en cours
+        </div>
+        <div class="card-body">
+            {% if emprunt_en_cours %}
+
+                <a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}" class="btn btn-success">Faire le retour de {{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</a>
+            {% else %}
+                <p>Aucun emprunt en cours</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Emprunts à venir
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Date de début</th>
+                    <th>Durée</th>
+                    <th>Adhérent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emprunt in emprunt_reserve %}
+                    <tr>
+                        <td>{{ emprunt.date_debut }}</td>
+                        <td>{{ emprunt.duree }}</td>
+                        <td>{{ emprunt.adherent.prenom }} {{ emprunt.adherent.nom }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
 
     <!-- Informations sur le Matériel -->
     <div class="card mb-4">
@@ -31,20 +71,24 @@
                         <td>{{ materiel.etat.value }}</td>
                     </tr>
                     <tr>
-                        <th scope="row">Référence :</th>
-                        <td>{{ materiel.reference }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Marque :</th>
-                        <td>{{ materiel.marque }}</td>
-                    </tr>
-                    <tr>
                         <th scope="row">Localisation :</th>
                         <td>{{ materiel.localisation }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Accessoires Inclus :</th>
-                        <td>{{ materiel.accessoires_inclus }}</td>
+                        <td>
+                            {% if accessoires_inclus %}
+                            <ul>
+                                {% for item in accessoires_inclus %}
+                                    <li>
+                                        <label for="check_{{ loop.index }}">{{ item }}</label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>Aucun accessoire pour ce matériel.</p>
+                        {% endif %}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -75,9 +119,54 @@
                         <th scope="row">Type d'Énergie :</th>
                         <td>{{ materiel.type_energie.value }}</td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Détails -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Détails
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <th scope="row">Référence :</th>
+                        <td>{{ materiel.reference }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Marque :</th>
+                        <td>{{ materiel.marque }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Description :</th>
+                        <td>{{ materiel.description }}</td>
+                    </tr>
                     <tr>
                         <th scope="row">Niveau danger :</th>
                         <td>{{ materiel.niveau_danger }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Sécurité :</th>
+                        <td>{{ materiel.securite }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Checklist :</th>
+                        <td>
+                            {% if checklist %}
+                            <ul>
+                                {% for item in checklist %}
+                                    <li>
+                                        <label for="check_{{ loop.index }}">{{ item }}</label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>Aucune checklist disponible pour ce matériel.</p>
+                        {% endif %}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -103,31 +192,6 @@
                     <tr>
                         <th scope="row">Nombre d'Heures :</th>
                         <td>{{ materiel.nb_heure }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Détails -->
-    <div class="card mb-4">
-        <div class="card-header">
-            Détails
-        </div>
-        <div class="card-body">
-            <table class="table table-striped table-hover">
-                <tbody>
-                    <tr>
-                        <th scope="row">Description :</th>
-                        <td>{{ materiel.description }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Sécurité :</th>
-                        <td>{{ materiel.securite }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Checklist :</th>
-                        <td>{{ materiel.checklist }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -165,11 +229,46 @@
         </div>
     </div>
 
-    <!-- Formulaire de suppression -->
-    <form action="{{ url_for('delete_materiel', materiel_id=materiel.id_materiel) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?');">
-        <button type="submit" class="btn btn-danger">Supprimer le Matériel</button>
+    <div class="card mb-4">
+        <div class="card-header">
+            Historique des emprunts
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Date de début</th>
+                    <th>Durée</th>
+                    <th>Adhérent</th>
+                    <th>Statut</th>
+                    <th>Montant payé</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emprunt in emprunt_historique %}
+                    <tr>
+                        <td>{{ emprunt.date_debut }}</td>
+                        <td>{{ emprunt.duree }}</td>
+                        <td>{{ emprunt.adherent.prenom }} {{ emprunt.adherent.nom }}</td>
+                        <td>{{ emprunt.statut.value }}</td>
+                        <td>{{ emprunt.montant_paye }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Formulaire de modification -->
+    <form action="{{ url_for('edit_materiel_get', numero_materiel=materiel.numero_materiel) }}" method="get">
+        <button type="submit" class="btn btn-primary">Modifier le Matériel</button>
     </form>
 
+    <!-- Formulaire de suppression 
+    <form action="{{ url_for('delete_materiel', numero_materiel=materiel.numero_materiel) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?');">
+        <button type="submit" class="btn btn-danger">Supprimer le Matériel</button>
+    </form>
+    -->
     <a href="{{ url_for('get_materiels') }}" class="btn btn-secondary mt-3">Retour à la liste des matériels</a>
 </div>
 {% endblock %}

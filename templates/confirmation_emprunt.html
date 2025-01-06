@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Récapitulatif de l'Emprunt{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{{ url_for('confirm_emprunt') }}">
+
+    <p><strong>Date de début :</strong> {{ emprunt_data['date_debut'] }}</p>
+    <p><strong>Durée :</strong> {{ emprunt_data['duree'] }} semaine</p>
+    <p><strong>Matériel :</strong> {{ materiel.numero_materiel }} - {{ materiel.nom_materiel }}</p>
+    <p><strong>Accessoires inclus :</strong>
+    {% if accessoires %}
+        <ul style="list-style-type: none; padding-left: 0;">
+        {% for item in accessoires %}
+            <li>
+                <input type="checkbox" id="check_{{ loop.index }}" name="checklist_{{ loop.index }}" required>
+                <label for="check_{{ loop.index }}">{{ item }}</label>
+            </li>
+        {% endfor %}
+        </ul>
+    </p>
+    {% else %}
+    <p>Aucun accessoire pour ce matériel.</p>
+    {% endif %}
+    <p><strong>Adhérent :</strong> {{ adherent.prenom }} {{ adherent.nom }}</p>
+    <p><strong>Localisation du matériel :</strong> {{ materiel.localisation }}</p>
+
+    <input type="hidden" name="date_debut" value="{{ emprunt_data['date_debut'] }}">
+    <input type="hidden" name="duree" value="{{ emprunt_data['duree'] }}">
+    <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
+    <input type="hidden" name="id_adherent" value="{{ adherent.id_adherent }}">
+    <input type="hidden" name="remarques" value="{{ emprunt_data['remarques'] }}">
+    <p><strong>Checklist :</strong>
+    {% if checklist %}
+        <ul style="list-style-type: none; padding-left: 0;">
+        {% for item in checklist %}
+            <li>
+                <input type="checkbox" id="check_{{ loop.index }}" name="checklist_{{ loop.index }}" required>
+                <label for="check_{{ loop.index }}">{{ item }}</label>
+            </li>
+        {% endfor %}
+        </ul>
+    </p>
+    {% else %}
+    <p>Aucune checklist disponible pour ce matériel.</p>
+    {% endif %}
+
+
+    <button type="submit">Confirmer l'Emprunt</button>
+</form>
+
+
+
+<form method="GET" action="{{ url_for('create_emprunt') }}">
+    <button type="submit">Modifier les informations</button>
+</form>
+
+<a href="{{ url_for('get_emprunts') }}">Retour à la liste des emprunts</a>
+
+
+{% endblock %}
