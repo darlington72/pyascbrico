@@ -10,9 +10,10 @@
     <table id="materielTable" class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>N° ASC</th>
                 <th>Nom</th>
                 <th>Prénom</th>
+                <th>Valide</th>
                 <th>Email</th>
                 <th>Statut</th>
                 <th>Téléphone</th>
@@ -22,11 +23,12 @@
         <tbody>
             {% for adherent in adherents %}
             <tr>
-                <td>{{ adherent.id_adherent }}</td>
+                <td>{{ adherent.numero_asc }}</td>
                 <td>{{ adherent.nom }}</td>
                 <td>{{ adherent.prenom }}</td>
+                <td>{{ adherent.valide_asc }}</td>
                 <td>{{ adherent.email }}</td>
-                <td>{{ adherent.statut.value }}</td>
+                <td>{{ adherent.statut }}</td>
                 <td>{{ adherent.telephone }}</td>
                 <td>{{ adherent.depuis }}</td>
             </tr>
@@ -45,7 +47,7 @@
             "searching": true,        // Recherche en temps réel activée
             "ordering": true,         // Tri activé
             "info": true,             // Affichage de l'information de pagination
-            "lengthMenu": [10, 25, 50, 100],  // Options de nombre d'éléments par page
+            "lengthMenu": [100, 200, -1],  // Options de nombre d'éléments par page
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
             }
@@ -56,7 +58,11 @@
 </div>
 
 <a href="/adherents/add" class="btn btn-success">Ajouter un Adherent</a>
-
-<a href="/adherents/add" class="btn btn-success">Importer depuis CSV</a>
+<!-- Formulaire pour télécharger le fichier CSV -->
+<form action="{{ url_for('import_csv') }}" method="POST" enctype="multipart/form-data">
+    <label for="csv_file">Sélectionner un fichier CSV :</label>
+    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+    <button  class="btn btn-success" type="submit">Importer depuis CSV</button>
+</form>
 
 {% endblock %}

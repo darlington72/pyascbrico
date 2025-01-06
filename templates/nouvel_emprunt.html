@@ -3,20 +3,38 @@
 {% block title %}Nouveau Emprunt{% endblock %}
 
 {% block content %}
-    <h2>Créer un nouvel emprunt</h2>
     <form method="POST">
-        <label for="date_debut">Date de début :</label>
-        <input type="date" name="date_debut" required>
 
-        <label for="duree">Durée (semaines) :</label>
-        <input type="number" name="duree" required>
+        <div class="card mb-4">
+            <div class="card-header">Dates et durées</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="date_vidange" class="form-label">Date de début</label>
+                    <input type="date" class="form-control" id="date_debut" name="date_debut" value="{{ current_date }}">
+                </div>
+                <div class="mb-3">
+                    <label for="duree" class="form-label">Nombre de semaines</label>
+                    <input type="number" step="1" min="1" max="2" class="form-control" id="duree" name="duree" value="1">
+                </div>
+            </div>
+        </div>
 
-        <label for="materiel">Matériel :</label>
-        <select name="materiel" required>
-            {% for materiel in materiels %}
-                <option value="{{ materiel.id_materiel }}">{{ materiel.nom_materiel }}</option>
-            {% endfor %}
-        </select>
+
+        <div class="card mb-4">
+            <div class="card-header">Materiel</div>
+            <div class="card-body">
+                <label for="materiel-select">Matériel :</label>
+
+                <select class="selectpicker" data-live-search="true">
+                    {% for materiel in materiels %}
+                        <option value="{{ materiel.id_materiel }}">{{ materiel.numero_materiel }} - {{ materiel.nom_materiel }}</option>
+                    {% endfor %}
+                </select>
+                  
+            </div>
+        </div>
+
+
 
         <label for="adherent">Adhérent :</label>
         <select name="adherent" required>
@@ -32,4 +50,21 @@
     </form>
 
     <a href="{{ url_for('get_emprunts') }}">Retour à la liste des emprunts</a>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Bootstrap-Select JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    
+    <script>
+        // Initialisation de Bootstrap-Select
+        $(document).ready(function() {
+            // Assurez-vous que le selectpicker est correctement initialisé après le chargement du DOM
+            $('.selectpicker').selectpicker();
+        });
+    </script>
 {% endblock %}

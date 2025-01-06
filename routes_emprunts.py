@@ -41,12 +41,18 @@ def create_emprunt():
         if materiel.accessoires_inclus:
             accessoires = [item.strip() for item in materiel.accessoires_inclus.split(',') if item.strip()]   
 
-        return render_template('confirmation_emprunt.html', emprunt_data=emprunt_data,materiel=materiel,checklist=checklist,adherent=adherent,accessoires=accessoires)
+        
+
+        return render_template('confirmation_emprunt.html', emprunt_data=emprunt_data,materiel=materiel,checklist=checklist,
+        adherent=adherent,accessoires=accessoires)
 
     # Récupérer les matériels et adhérents pour le formulaire
     materiels = Materiel.query.all()
     adherents = Adherent.query.all()
-    return render_template('nouvel_emprunt.html', materiels=materiels, adherents=adherents)
+
+    current_date = datetime.now().strftime('%Y-%m-%d')
+
+    return render_template('nouvel_emprunt.html', materiels=materiels, adherents=adherents,current_date=current_date)
 
 
 @app.route('/emprunts/confirm', methods=['POST'])

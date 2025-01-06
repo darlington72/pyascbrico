@@ -5,159 +5,202 @@
 {% block content %}
 
     <form method="POST" enctype="multipart/form-data">
+
+        <div class="card mb-4">
+            <div class="card-header">Etat</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <select class="form-select" id="etat" name="etat" required>
+                        {% for etat in etats %}
+                            <option value="{{ etat }}" {% if etat == materiel.etat.value %}selected{% endif %}>{{ etat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
         
-        <!-- Nom du matériel -->
-        <div class="form-group">
-            <label for="nom_materiel">Nom du matériel:</label>
-            <input type="text" name="nom_materiel" value="{{ materiel.nom_materiel }}" required>
-        </div>
-        
-        <!-- Numéro du matériel -->
-        <div class="form-group">
-            <label for="numero_materiel">Numéro du matériel:</label>
-            <input type="text" name="numero_materiel" value="{{ materiel.numero_materiel }}" required>
-        </div>
-
-        <!-- Description -->
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea name="description">{{ materiel.description }}</textarea>
-        </div>
-
-        <!-- Prix de location par semaine -->
-        <div class="form-group">
-            <label for="prix_location_semaine">Prix de location par semaine:</label>
-            <input type="number" name="prix_location_semaine" value="{{ materiel.prix_location_semaine }}" required>
-        </div>
-
-        <!-- Quantité disponible -->
-        <div class="form-group">
-            <label for="quantite_disponible">Quantité disponible:</label>
-            <input type="number" name="quantite_disponible" value="{{ materiel.quantite_disponible }}" required>
+        <div class="card mb-4">
+            <div class="card-header">Informations Générales</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="nom_materiel" class="form-label">Nom du Matériel *</label>
+                    <input type="text" class="form-control" id="nom_materiel" name="nom_materiel" value="{{ materiel.nom_materiel }}" required> 
+                </div>
+                <div class="mb-3">
+                    <label for="numero_materiel" class="form-label">Numéro du Matériel *</label>
+                    <input type="number" step="1" class="form-control" id="numero_materiel" name="numero_materiel" value="{{ materiel.numero_materiel }}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="prix_location_semaine" class="form-label">Prix Location Semaine *</label>
+                    <input type="number" step="1" class="form-control" id="prix_location_semaine" name="prix_location_semaine" value="{{ materiel.prix_location_semaine }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="localisation" class="form-label">Localisation</label>
+                    <input type="text" class="form-control" id="localisation" name="localisation" value="{{ materiel.localisation }}">
+                </div>
+                <div class="mb-3">
+                    <label for="accessoires_inclus" class="form-label">Accessoires inclus (séparer par des virgules) :</label>
+                    <input type="text" class="form-control" id="accessoires_inclus" name="accessoires_inclus" value="{{ materiel.accessoires_inclus }}">
+                </div>
+            </div>
         </div>
 
-        <!-- Catégorie -->
-        <div class="form-group">
-            <label for="categorie">Catégorie:</label>
-            <select name="categorie">
-                {% for category in categories %}
-                    <option value="{{ category }}" {% if category == materiel.categorie %}selected{% endif %}>{{ category }}</option>
-                {% endfor %}
-            </select>
+        <div class="card mb-4">
+            <div class="card-header">Caractéristiques</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="poids" class="form-label">Poids (kg)</label>
+                    <input type="number" step="0.01" class="form-control" id="poids" name="poids" value="{{ materiel.poids }}">
+                </div>
+                <div class="mb-3">
+                    <label for="dimensions" class="form-label">Dimensions (L x l x H, cm)</label>
+                    <input type="text" class="form-control" id="dimensions" name="dimensions" value="{{ materiel.dimensions }}">
+                </div>
+                <div class="mb-3">
+                    <label for="categorie" class="form-label">Catégorie *</label>
+                    <select class="form-select" id="categorie" name="categorie" required>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" {% if cat == materiel.categorie.value %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="type_energie" class="form-label">Type d'Énergie *</label>
+                    <select class="form-select" id="type_energie" name="type_energie" required>
+                        {% for energie in typeenergies %}
+                            <option value="{{ energie }}" {% if energie == materiel.type_energie.value %}selected{% endif %}>{{ energie }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
         </div>
 
-        <!-- Niveau de danger -->
-        <div class="form-group">
-            <label for="niveau_danger">Niveau de danger:</label>
-            <input type="text" name="niveau_danger" value="{{ materiel.niveau_danger }}">
+        <div class="card mb-4">
+            <div class="card-header">Détails</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="reference" class="form-label">Référence</label>
+                    <input type="text" class="form-control" id="reference" name="reference" value="{{ materiel.reference }}">
+                </div>
+                <div class="mb-3">
+                    <label for="num_serie" class="form-label">Numéro de Série</label>
+                    <input type="text" class="form-control" id="num_serie" name="num_serie" value="{{ materiel.num_serie }}">
+                </div>
+                <div class="mb-3">
+                    <label for="marque" class="form-label">Marque</label>
+                    <input type="text" class="form-control" id="marque" name="marque" value="{{ materiel.marque }}">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description">{{ materiel.description }}</textarea>
+                </div>
+            </div>
         </div>
 
-        <!-- Poids -->
-        <div class="form-group">
-            <label for="poids">Poids (kg):</label>
-            <input type="number" name="poids" step="0.01" value="{{ materiel.poids }}">
+        <div class="card mb-4">
+            <div class="card-header">Sécurité</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="niveau_danger" class="form-label">Niveau de danger (de 1 min à 3 max) *</label>
+                    <select class="form-select" id="niveau_danger" name="niveau_danger" value="{{ materiel.niveau_danger }}" required>
+                        <option value="1" {% if 1 == materiel.niveau_danger %}selected{% endif %}>1</option>
+                        <option value="2" {% if 2 == materiel.niveau_danger %}selected{% endif %}>2</option>
+                        <option value="3" {% if 3 == materiel.niveau_danger %}selected{% endif %}>3</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="securite" class="form-label">Sécurité</label>
+                    <textarea class="form-control" id="securite" name="securite" rows="3">{{ materiel.securite }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="checklist" class="form-label">Checklist (séparer par des virgules)</label>
+                    <textarea class="form-control" id="checklist" name="checklist" rows="3">{{ materiel.checklist }}</textarea>
+                </div>
+            </div>
         </div>
 
-        <!-- Référence -->
-        <div class="form-group">
-            <label for="reference">Référence:</label>
-            <input type="text" name="reference" value="{{ materiel.reference }}">
+        <div class="card mb-4">
+            <div class="card-header">Documents</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="manuel_user" class="form-label">Manuel Utilisateur</label>
+                    
+                    {% if materiel.manuel_user %}
+                        <div class="mb-2">
+                            <a href="{{ url_for('telecharger_mu', numero_materiel=materiel.numero_materiel) }}">{{ materiel.manuel_user }}</a>
+                        </div>
+                    {% endif %}
+                    
+                    <input type="file" class="form-control" id="manuel_user" name="manuel_user">
+                </div>
+                <div class="mb-3">
+                    <label for="vue_eclatee" class="form-label">Vue Éclatée</label>
+                    
+                    {% if materiel.vue_eclatee %}
+                        <div class="mb-2">
+                            <a href="{{ url_for('telecharger_vue_eclatee', numero_materiel=materiel.numero_materiel) }}">{{ materiel.vue_eclatee }}</a>
+                        </div>
+                    {% endif %}
+                    
+                    <input type="file" class="form-control" id="vue_eclatee" name="vue_eclatee">
+                </div>
+            </div>
         </div>
 
-        <!-- Numéro de série -->
-        <div class="form-group">
-            <label for="num_serie">Numéro de série:</label>
-            <input type="text" name="num_serie" value="{{ materiel.num_serie }}">
+        <div class="card mb-4">
+            <div class="card-header">Entretien</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="date_vidange" class="form-label">Date de Vidange</label>
+                    <input type="date" class="form-control" id="date_vidange" name="date_vidange" value="{{ materiel.date_vidange }}" >
+                </div>
+                <div class="mb-3">
+                    <label for="date_entretien" class="form-label">Date d'Entretien</label>
+                    <input type="date" class="form-control" id="date_entretien" name="date_entretien" value="{{ materiel.date_entretien }}" >
+                </div>
+                <div class="mb-3">
+                    <label for="nb_heure" class="form-label">Nombre d'heures</label>
+                    <input type="number" step="1" class="form-control" id="nb_heure" name="nb_heure" value="{{ materiel.nb_heure }}" >
+                </div>
+            </div>
         </div>
 
-        <!-- Marque -->
-        <div class="form-group">
-            <label for="marque">Marque:</label>
-            <input type="text" name="marque" value="{{ materiel.marque }}">
-        </div>
-
-        <!-- Localisation -->
-        <div class="form-group">
-            <label for="localisation">Localisation:</label>
-            <input type="text" name="localisation" value="{{ materiel.localisation }}">
-        </div>
-
-        <!-- Lieu d'achat -->
-        <div class="form-group">
-            <label for="lieu_achat">Lieu d'achat:</label>
-            <input type="text" name="lieu_achat" value="{{ materiel.lieu_achat }}">
-        </div>
-
-        <!-- Type d'énergie -->
-        <div class="form-group">
-            <label for="type_energie">Type d'énergie:</label>
-            <select name="type_energie">
-                {% for type in typeenergies %}
-                    <option value="{{ type }}" {% if type == materiel.type_energie %}selected{% endif %}>{{ type }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Dimensions -->
-        <div class="form-group">
-            <label for="dimensions">Dimensions (L x l x H):</label>
-            <input type="text" name="dimensions" value="{{ materiel.dimensions }}">
-        </div>
-
-        <!-- Accessoires inclus -->
-        <div class="form-group">
-            <label for="accessoires_inclus">Accessoires inclus:</label>
-            <input type="text" name="accessoires_inclus" value="{{ materiel.accessoires_inclus }}">
-        </div>
-
-        <!-- Sécurité -->
-        <div class="form-group">
-            <label for="securite">Sécurité:</label>
-            <input type="text" name="securite" value="{{ materiel.securite }}">
-        </div>
-
-        <!-- Facture -->
-        <div class="form-group">
-            <label for="facture">Facture (PDF, JPG, PNG, etc.):</label>
-            <input type="file" name="facture">
-        </div>
-
-        <!-- Manuel utilisateur -->
-        <div class="form-group">
-            <label for="manuel_user">Manuel utilisateur (PDF, DOC, etc.):</label>
-            <input type="file" name="manuel_user">
-        </div>
-
-        <!-- Vue éclatée -->
-        <div class="form-group">
-            <label for="vue_eclatee">Vue éclatée (PDF, JPG, PNG, etc.):</label>
-            <input type="file" name="vue_eclatee">
-        </div>
-
-        <!-- Date d'achat -->
-        <div class="form-group">
-            <label for="date_achat">Date d'achat:</label>
-            <input type="date" name="date_achat" value="{{ materiel.date_achat }}">
-        </div>
-
-        <!-- Date de vidange -->
-        <div class="form-group">
-            <label for="date_vidange">Date de vidange:</label>
-            <input type="date" name="date_vidange" value="{{ materiel.date_vidange }}">
-        </div>
-
-        <!-- Date d'entretien -->
-        <div class="form-group">
-            <label for="date_entretien">Date d'entretien:</label>
-            <input type="date" name="date_entretien" value="{{ materiel.date_entretien }}">
+        <div class="card mb-4">
+            <div class="card-header">Lié à l'achat</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="date_achat" class="form-label">Date d'Achat</label>
+                    <input type="date" class="form-control" id="date_achat" name="date_achat" value="{{ materiel.date_achat }}" >
+                </div>
+                <div class="mb-3">
+                    <label for="lieu_achat" class="form-label">URL / Adresse d'achat</label>
+                    <input type="text" class="form-control" id="lieu_achat" name="lieu_achat" value="{{ materiel.lieu_achat }}" >
+                </div>
+                <div class="mb-3">
+                    <label for="prix_achat" class="form-label">Prix d'achat</label>
+                    <input type="number" step="0.01" class="form-control" id="prix_achat" name="prix_achat" value="{{ materiel.prix_achat }}" >
+                </div>
+                <div class="mb-3">
+                    <label for="facture" class="form-label">Facture</label>
+                    
+                    {% if materiel.facture %}
+                        <div class="mb-2">
+                            <a href="{{ url_for('telecharger_facture', numero_materiel=materiel.numero_materiel) }}">{{ materiel.facture }}</a>
+                        </div>
+                    {% endif %}
+                    
+                    <input type="file" class="form-control" id="facture" name="facture">
+                </div>
+            </div>
         </div>
 
         <!-- Bouton de soumission -->
-        <div class="form-group">
-            <input type="submit" value="Modifier le matériel">
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success">Confirmer la modification</button>
         </div>
 
     </form>
 
+    <a href="{{ url_for('get_materiel', numero_materiel=materiel.numero_materiel) }}" class="btn btn-secondary mt-3">Retour au matériel</a>
 
 {% endblock %}

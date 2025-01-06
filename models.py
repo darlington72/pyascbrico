@@ -40,7 +40,6 @@ class Materiel(db.Model):
         prix_location_semaine (float): Prix de location par semaine.
         etat (Etat): Indique l'état du matériel.
         date_achat (date): Date d'achat du matériel.
-        quantite_disponible (int): Quantité disponible à la location.
         categorie (Categorie): Catégorie du matériel.
         niveau_danger (bool): Indique si le matériel est dangereux (de 1 à 3).
         poids (float): Poids du matériel.
@@ -74,7 +73,6 @@ class Materiel(db.Model):
     prix_location_semaine = db.Column(db.Float, nullable=False)
     etat = db.Column(db.Enum(Etat), index=True, default=Etat.ok)
     date_achat = db.Column(db.Date)
-    quantite_disponible = db.Column(db.Integer, default=1)
     categorie = db.Column(db.Enum(Categorie), index=True)
     poids = db.Column(db.Float)
     reference = db.Column(db.String(50))
@@ -117,23 +115,17 @@ class Materiel(db.Model):
         self.avis_client = note
 
 
-
-class Statut_Adherent(Enum):
-    """Enum représentant les statuts des adhérents."""
-    cie = "cie"
-    retraite = "retraite"
-    non_cie = "non_cie"
-
 class Adherent(db.Model):
     """Modèle représentant un adhérent.
 
     Attributs :
         id_adherent (int): Identifiant unique de l'adhérent.
+        numero_asc (int):  Numéro ASC de l'adhérent.
         nom (str): Nom de l'adhérent.
         prenom (str): Prénom de l'adhérent.
         valide_asc (bool): Indique si l'adhérent est valide.
         email (str): Adresse email de l'adhérent.
-        statut (Statut_Adherent): Statut de l'adhérent.
+        statut (str): Statut de l'adhérent.
         telephone (str): Numéro de téléphone de l'adhérent.
         depuis (date): Date d'adhésion.
         badge (str): Identifiant de badge de l'adhérent.
@@ -143,11 +135,12 @@ class Adherent(db.Model):
 
     # Champs
     id_adherent = db.Column(db.Integer, primary_key=True)
+    numero_asc = db.Column(db.Integer)
     nom = db.Column(db.String(100), nullable=False)
     prenom = db.Column(db.String(100), nullable=False)
     valide_asc = db.Column(db.Boolean, default=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    statut = db.Column(db.Enum(Statut_Adherent))
+    email = db.Column(db.String(100),  nullable=False)
+    statut = db.Column(db.String(100))
     telephone = db.Column(db.String(15), nullable=True)
     depuis = db.Column(db.Date)
     badge = db.Column(db.String(100))

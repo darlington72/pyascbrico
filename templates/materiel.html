@@ -46,186 +46,204 @@
         </div>
     </div>
 
+    <div class="card mb-4">
+        <div class="card-header">
+            Etat
+        </div>
+        <div class="card-body">
+            <td>{{ materiel.etat.value }}</td>
+        </div>
+    </div>
+
+
+
     <!-- Informations sur le Matériel -->
     <div class="card mb-4">
-        <div class="card-header">
-            General
-        </div>
+        <div class="card-header">Informations Générales</div>
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <tbody>
-                    <tr>
-                        <th scope="row">Nom :</th>
-                        <td>{{ materiel.nom_materiel }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Numéro :</th>
-                        <td>{{ materiel.numero_materiel }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Prix Location Semaine :</th>
-                        <td>{{ materiel.prix_location_semaine }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">État :</th>
-                        <td>{{ materiel.etat.value }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Localisation :</th>
-                        <td>{{ materiel.localisation }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Accessoires Inclus :</th>
-                        <td>
-                            {% if accessoires_inclus %}
-                            <ul>
-                                {% for item in accessoires_inclus %}
-                                    <li>
-                                        <label for="check_{{ loop.index }}">{{ item }}</label>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p>Aucun accessoire pour ce matériel.</p>
-                        {% endif %}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="mb-3">
+                <label for="nom_materiel" class="form-label">Nom du Matériel</label>
+                <input type="text" class="form-control" id="nom_materiel" name="nom_materiel" value="{{ materiel.nom_materiel }}" readonly> 
+            </div>
+            <div class="mb-3">
+                <label for="numero_materiel" class="form-label">Numéro du Matériel</label>
+                <input type="number" class="form-control" id="numero_materiel" name="numero_materiel" value="{{ materiel.numero_materiel }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="prix_location_semaine" class="form-label">Prix Location Semaine</label>
+                <input type="number" class="form-control" id="prix_location_semaine" name="prix_location_semaine" value="{{ materiel.prix_location_semaine }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="localisation" class="form-label">Localisation</label>
+                <input type="text" class="form-control" id="localisation" name="localisation" value="{{ materiel.localisation }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="accessoires_inclus" class="form-label">Accessoires inclus :</label>
+                <td>
+                    {% if accessoires_inclus %}
+                        <div class="list-group">
+                            {% for item in accessoires_inclus %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{{ item }}</span>
+                                    <input type="checkbox" class="form-check-input" id="check_{{ loop.index }}" checked disabled>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">
+                            Aucun accessoire inclus pour ce matériel.
+                        </div>
+                    {% endif %}
+                </td>
+            </div>
         </div>
     </div>
 
-    <!-- Caractéristiques -->
     <div class="card mb-4">
-        <div class="card-header">
-            Caractéristiques
-        </div>
+        <div class="card-header">Caractéristiques</div>
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <tbody>
-                    <tr>
-                        <th scope="row">Poids :</th>
-                        <td>{{ materiel.poids }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Dimensions :</th>
-                        <td>{{ materiel.dimensions }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Catégorie :</th>
-                        <td>{{ materiel.categorie.value }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Type d'Énergie :</th>
-                        <td>{{ materiel.type_energie.value }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="mb-3">
+                <label for="poids" class="form-label">Poids (kg)</label>
+                <input type="number" class="form-control" id="poids" name="poids" value="{{ materiel.poids }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="dimensions" class="form-label">Dimensions (L x l x H, cm)</label>
+                <input type="text" class="form-control" id="dimensions" name="dimensions" value="{{ materiel.dimensions }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="categorie" class="form-label">Catégorie</label>
+                <input type="text" class="form-control" id="categorie" name="categorie" value="{{ materiel.categorie.value }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="type_energie" class="form-label">Type d'Énergie</label>
+                <input type="text" class="form-control" id="type_energie" name="type_energie" value="{{ materiel.type_energie.value }}" readonly>
+            </div>
         </div>
     </div>
 
-    <!-- Détails -->
     <div class="card mb-4">
-        <div class="card-header">
-            Détails
-        </div>
+        <div class="card-header">Détails</div>
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <tbody>
-                    <tr>
-                        <th scope="row">Référence :</th>
-                        <td>{{ materiel.reference }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Marque :</th>
-                        <td>{{ materiel.marque }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Description :</th>
-                        <td>{{ materiel.description }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Niveau danger :</th>
-                        <td>{{ materiel.niveau_danger }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Sécurité :</th>
-                        <td>{{ materiel.securite }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Checklist :</th>
-                        <td>
-                            {% if checklist %}
-                            <ul>
-                                {% for item in checklist %}
-                                    <li>
-                                        <label for="check_{{ loop.index }}">{{ item }}</label>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p>Aucune checklist disponible pour ce matériel.</p>
-                        {% endif %}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="mb-3">
+                <label for="reference" class="form-label">Référence</label>
+                <input type="text" class="form-control" id="reference" name="reference" value="{{ materiel.reference }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="num_serie" class="form-label">Numéro de Série</label>
+                <input type="text" class="form-control" id="num_serie" name="num_serie" value="{{ materiel.num_serie }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="marque" class="form-label">Marque</label>
+                <input type="text" class="form-control" id="marque" name="marque" value="{{ materiel.marque }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" readonly>{{ materiel.description }}</textarea>
+            </div>
         </div>
     </div>
 
-    <!-- Entretien -->
     <div class="card mb-4">
-        <div class="card-header">
-            Entretien
-        </div>
+        <div class="card-header">Sécurité</div>
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <tbody>
-                    <tr>
-                        <th scope="row">Date de Vidange :</th>
-                        <td>{{ materiel.date_vidange }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Date d'Entretien :</th>
-                        <td>{{ materiel.date_entretien }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Nombre d'Heures :</th>
-                        <td>{{ materiel.nb_heure }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="mb-3">
+                <label for="niveau_danger" class="form-label">Niveau de danger (de 1 min à 3 max)</label>
+                <input type="text" class="form-control" id="niveau_danger" name="niveau_danger" value="{{ materiel.niveau_danger }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="securite" class="form-label">Sécurité</label>
+                <textarea class="form-control" id="securite" name="securite" rows="3" readonly>{{ materiel.securite }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="checklist" class="form-label">Checklist </label>
+                <td>
+                    {% if checklist %}
+                        <div class="list-group">
+                            {% for item in checklist %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{{ item }}</span>
+                                    <input type="checkbox" class="form-check-input" id="check_{{ loop.index }}" checked disabled>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">
+                            Aucun checklist disponible pour ce matériel.
+                        </div>
+                    {% endif %}
+                </td>
+            </div>
         </div>
     </div>
 
-    <!-- Lié à l'achat -->
     <div class="card mb-4">
-        <div class="card-header">
-            Lié à l'achat
-        </div>
+        <div class="card-header">Documents</div>
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <tbody>
-                    <tr>
-                        <th scope="row">Date d'Achat :</th>
-                        <td>{{ materiel.date_achat }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">URL / Adresse achat :</th>
-                        <td>{{ materiel.lieu_achat }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Factue :</th>
-                        <td>
-                            {% if materiel.facture %}
-                                <a href="{{ url_for('static', filename=materiel.facture) }}" target="_blank" class="btn btn-link">Télécharger le document</a>
-                            {% else %}
-                                Aucun document joint
-                            {% endif %}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="mb-3">
+                <label for="manuel_user" class="form-label">Manuel Utilisateur</label>
+                
+                {% if materiel.manuel_user %}
+                    <div class="mb-2">
+                        <a href="{{ url_for('telecharger_mu', numero_materiel=materiel.numero_materiel) }}">{{ materiel.manuel_user }}</a>
+                    </div>
+                {% endif %}
+                
+            </div>
+            <div class="mb-3">
+                <label for="vue_eclatee" class="form-label">Vue Éclatée</label>
+                
+                {% if materiel.vue_eclatee %}
+                    <div class="mb-2">
+                        <a href="{{ url_for('telecharger_vue_eclatee', numero_materiel=materiel.numero_materiel) }}">{{ materiel.vue_eclatee }}</a>
+                    </div>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Entretien</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="date_vidange" class="form-label">Date de Vidange</label>
+                <input type="date" class="form-control" id="date_vidange" name="date_vidange" value="{{ materiel.date_vidange }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="date_entretien" class="form-label">Date d'Entretien</label>
+                <input type="date" class="form-control" id="date_entretien" name="date_entretien" value="{{ materiel.date_entretien }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="nb_heure" class="form-label">Nombre d'heures</label>
+                <input type="number" class="form-control" id="nb_heure" name="nb_heure" value="{{ materiel.nb_heure }}" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Lié à l'achat</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="date_achat" class="form-label">Date d'Achat</label>
+                <input type="date" class="form-control" id="date_achat" name="date_achat" value="{{ materiel.date_achat }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="lieu_achat" class="form-label">URL / Adresse d'achat</label>
+                <input type="text" class="form-control" id="lieu_achat" name="lieu_achat" value="{{ materiel.lieu_achat }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="prix_achat" class="form-label">Prix d'achat</label>
+                <input type="number" class="form-control" id="prix_achat" name="prix_achat" value="{{ materiel.prix_achat }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="facture" class="form-label">Facture</label>
+                
+                {% if materiel.facture %}
+                    <div class="mb-2">
+                        <a href="{{ url_for('telecharger_facture', numero_materiel=materiel.numero_materiel) }}">{{ materiel.facture }}</a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -259,6 +277,17 @@
         </div>
     </div>
 
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Avis des utilisateurs
+        </div>
+        <div class="card-body">
+            (de 1 à 5) : {{ materiel.avis_client }} 
+        </div>
+    </div>
+
+    
     <!-- Formulaire de modification -->
     <form action="{{ url_for('edit_materiel_get', numero_materiel=materiel.numero_materiel) }}" method="get">
         <button type="submit" class="btn btn-primary">Modifier le Matériel</button>

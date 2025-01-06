@@ -1,94 +1,172 @@
 {% extends "base.html" %}
 
-{% block title %}Ajouter un Matériel{% endblock %}
+{% block title %}Créer un nouveau matériel{% endblock %}
 
 {% block content %}
-<h2>Ajouter un Nouveau Matériel</h2>
-<form method="POST" enctype="multipart/form-data">
-    <label for="nom_materiel">Nom du Matériel :</label>
-    <input type="text" id="nom_materiel" name="nom_materiel" required><br>
+<div class="container mt-5">
+    <h2 class="mb-4">Créer un Nouveau Matériel</h2>
 
-    <label for="numero_materiel">Numéro du Matériel :</label>
-    <input type="text" id="numero_materiel" name="numero_materiel" required><br>
+    <form action="{{ url_for('create_materiel_post') }}" method="POST" enctype="multipart/form-data">
+        <div class="card mb-4">
+            <div class="card-header">Informations Générales</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="nom_materiel" class="form-label">Nom du Matériel *</label>
+                    <input type="text" class="form-control" id="nom_materiel" name="nom_materiel" required>
+                </div>
+                <div class="mb-3">
+                    <label for="numero_materiel" class="form-label">Numéro du Matériel *</label>
+                    <input type="number" step="1" class="form-control" id="numero_materiel" name="numero_materiel" required>
+                </div>
+                <div class="mb-3">
+                    <label for="prix_location_semaine" class="form-label">Prix Location Semaine *</label>
+                    <input type="number" step="1" class="form-control" id="prix_location_semaine" name="prix_location_semaine" required>
+                </div>
+                <div class="mb-3">
+                    <label for="localisation" class="form-label">Localisation</label>
+                    <input type="text" class="form-control" id="localisation" name="localisation">
+                </div>
+                <div class="mb-3">
+                    <label for="accessoires_inclus" class="form-label">Accessoires inclus (séparer par des virgules) : </label>
+                    <input type="text" class="form-control" id="accessoires_inclus" name="accessoires_inclus">
+                </div>
+            </div>
+        </div>
 
-    <label for="description">Description :</label>
-    <textarea id="description" name="description"></textarea><br>
+        <div class="card mb-4">
+            <div class="card-header">Caractéristiques</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="poids" class="form-label">Poids (kg)</label>
+                    <input type="number" step="0.01" class="form-control" id="poids" name="poids">
+                </div>
+                <div class="mb-3">
+                    <label for="dimensions" class="form-label">Dimensions (L x l x H, cm)</label>
+                    <input type="text" class="form-control" id="dimensions" name="dimensions">
+                </div>
+                <div class="mb-3">
+                    <label for="categorie" class="form-label">Catégorie *</label>
+                    <select class="form-select" id="categorie" name="categorie" required>
+                        {% for cat in categories %}
+                            <option value="{{ cat }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="type_energie" class="form-label">Type d'Énergie *</label>
+                    <select class="form-select" id="type_energie" name="type_energie" required>
+                        {% for energie in typeenergies %}
+                            <option value="{{ energie }}">{{ energie }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
 
-    <label for="prix_location_semaine">Prix Location Semaine :</label>
-    <input type="number" step="0.01" id="prix_location_semaine" name="prix_location_semaine" required><br>
+        <div class="card mb-4">
+            <div class="card-header">Détails</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="reference" class="form-label">Référence</label>
+                    <input type="text" class="form-control" id="reference" name="reference">
+                </div>
+                <div class="mb-3">
+                    <label for="num_serie" class="form-label">Numéro de Série</label>
+                    <input type="text" class="form-control" id="num_serie" name="num_serie">
+                </div>
+                <div class="mb-3">
+                    <label for="marque" class="form-label">Marque</label>
+                    <input type="text" class="form-control" id="marque" name="marque">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description"></textarea>
+                </div>
+            </div>
+        </div>
 
-    <label for="date_achat">Date d'Achat :</label>
-    <input type="date" id="date_achat" name="date_achat"><br>
+        <div class="card mb-4">
+            <div class="card-header">Sécurité</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="niveau_danger" class="form-label">Niveau de danger (de 1 min à 3 max) *</label>
+                    <select class="form-select" id="niveau_danger" name="niveau_danger" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="securite" class="form-label">Sécurité</label>
+                    <textarea class="form-control" id="securite" name="securite" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="checklist" class="form-label">Checklist (séparer par des virgules)</label>
+                    <textarea class="form-control" id="checklist" name="checklist" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
 
-    <label for="lieu_achat">Lieu achat (url ou adresse) :</label>
-    <input type="text" id="lieu_achat" name="lieu_achat"><br>
+        <div class="card mb-4">
+            <div class="card-header">Documents</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="manuel_user" class="form-label">Manuel Utilisateur</label>
+                    <input type="file" class="form-control" id="manuel_user" name="manuel_user">
+                </div>
+                <div class="mb-3">
+                    <label for="vue_eclatee" class="form-label">Vue Éclatée</label>
+                    <input type="file" class="form-control" id="vue_eclatee" name="vue_eclatee">
+                </div>
+            </div>
+        </div>
 
-    <label for="quantite_disponible">Quantité Disponible :</label>
-    <input type="number" id="quantite_disponible" name="quantite_disponible" value="1" required><br>
+        <div class="card mb-4">
+            <div class="card-header">Entretien</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="date_vidange" class="form-label">Date de Vidange</label>
+                    <input type="date" class="form-control" id="date_vidange" name="date_vidange">
+                </div>
+                <div class="mb-3">
+                    <label for="date_entretien" class="form-label">Date d'Entretien</label>
+                    <input type="date" class="form-control" id="date_entretien" name="date_entretien">
+                </div>
+                <div class="mb-3">
+                    <label for="nb_heure" class="form-label">Nombre d'heures</label>
+                    <input type="number" step="1" class="form-control" id="nb_heure" name="nb_heure" value="0" >
+                </div>
+            </div>
+        </div>
 
-    <label for="categorie">Catégorie :</label>
-    <select id="categorie" name="categorie" required>
-        <option value="">Sélectionnez une catégorie</option>
-        {% for category in categories %}
-            <option value="{{ category|lower }}">{{ category|lower }}</option>
-        {% endfor %}
-    </select><br>
+        <div class="card mb-4">
+            <div class="card-header">Lié à l'achat</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="date_achat" class="form-label">Date d'Achat</label>
+                    <input type="date" class="form-control" id="date_achat" name="date_achat">
+                </div>
+                <div class="mb-3">
+                    <label for="lieu_achat" class="form-label">URL / Adresse d'achat</label>
+                    <input type="text" class="form-control" id="lieu_achat" name="lieu_achat">
+                </div>
+                <div class="mb-3">
+                    <label for="prix_achat" class="form-label">Prix d'achat</label>
+                    <input type="number" step="0.01" class="form-control" id="prix_achat" name="prix_achat" value="0" >
+                </div>
+                <div class="mb-3">
+                    <label for="facture" class="form-label">Facture</label>
+                    <input type="file" class="form-control" id="facture" name="facture">
+                </div>
+            </div>
+        </div>
+        
 
-    <label for="checklist">Checklist (séparée par des virgules):</label>
-    <input type="text" id="checklist" name="checklist"><br>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Créer le Matériel</button>
+        </div>
+    </form>
 
-    <label for="niveau_danger">Dangereux (de 1 à 3):</label>
-    <input type="number" id="niveau_danger" name="niveau_danger" min="1" max="3" required><br>
-
-    <label for="poids">Poids :</label>
-    <input type="number" step="0.01" id="poids" name="poids"><br>
-
-    <label for="reference">Référence :</label>
-    <input type="text" id="reference" name="reference"><br>
-
-    <label for="num_serie">Numéro de série :</label>
-    <input type="text" id="num_serie" name="num_serie"><br>
-
-    <label for="date_vidange">Date de Vidange :</label>
-    <input type="date" id="date_vidange" name="date_vidange"><br>
-
-    <label for="date_entretien">Date d'Entretien :</label>
-    <input type="date" id="date_entretien" name="date_entretien"><br>
-
-    <label for="marque">Marque :</label>
-    <input type="text" id="marque" name="marque"><br>
-
-    <label for="facture">Facture (télécharger un document) :</label>
-    <input type="file" id="facture" name="facture" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"><br>
-
-    <label for="localisation">Localisation :</label>
-    <input type="text" id="localisation" name="localisation"><br>
-
-    <label for="manuel_user">Document (télécharger un document) :</label>
-    <input type="file" id="manuel_user" name="manuel_user" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"><br>
-
-    <label for="vue_eclatee">Vue eclatée (télécharger un document) :</label>
-    <input type="file" id="vue_eclatee" name="vue_eclatee" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"><br>
-
-    <label for="type_energie">Type d'Énergie :</label>
-    <select id="type_energie" name="type_energie" required>
-        <option value="">Sélectionnez un type d'energie</option>
-        {% for type_energie in typeenergies %}
-            <option value="{{ type_energie|lower }}">{{ type_energie|lower }}</option>
-        {% endfor %}
-    </select><br>
-
-    <label for="dimensions">Dimensions :</label>
-    <input type="text" id="dimensions" name="dimensions"><br>
-
-    <label for="accessoires_inclus">Accessoires Inclus :</label>
-    <textarea id="accessoires_inclus" name="accessoires_inclus"></textarea><br>
-
-    <label for="securite">Sécurité :</label>
-    <textarea id="securite" name="securite"></textarea><br>
-
-    <input type="submit" value="Ajouter le Matériel">
-</form>
-
-
+    <a href="{{ url_for('get_materiels') }}" class="btn btn-secondary mt-3">Retour à la liste des matériels</a>
+</div>
 {% endblock %}

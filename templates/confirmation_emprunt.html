@@ -4,59 +4,107 @@
 
 {% block content %}
 
-<form method="POST" action="{{ url_for('confirm_emprunt') }}">
+<!-- Utilisation de Bootstrap pour un design moderne -->
+<div class="container my-5">
+    <h1 class="mb-4">Récapitulatif de l'Emprunt</h1>
+    <form method="POST" action="{{ url_for('confirm_emprunt') }}" id="empruntForm">
 
-    <p><strong>Date de début :</strong> {{ emprunt_data['date_debut'] }}</p>
-    <p><strong>Durée :</strong> {{ emprunt_data['duree'] }} semaine</p>
-    <p><strong>Matériel :</strong> {{ materiel.numero_materiel }} - {{ materiel.nom_materiel }}</p>
-    <p><strong>Accessoires inclus :</strong>
-    {% if accessoires %}
-        <ul style="list-style-type: none; padding-left: 0;">
-        {% for item in accessoires %}
-            <li>
-                <input type="checkbox" id="check_{{ loop.index }}" name="checklist_{{ loop.index }}" required>
-                <label for="check_{{ loop.index }}">{{ item }}</label>
-            </li>
-        {% endfor %}
-        </ul>
-    </p>
-    {% else %}
-    <p>Aucun accessoire pour ce matériel.</p>
-    {% endif %}
-    <p><strong>Adhérent :</strong> {{ adherent.prenom }} {{ adherent.nom }}</p>
-    <p><strong>Localisation du matériel :</strong> {{ materiel.localisation }}</p>
+        <!-- Affichage des informations générales -->
+        <div class="mb-3">
+            <label><strong>Date de début :</strong></label>
+            <p>{{ emprunt_data['date_debut'] }}</p>
+        </div>
 
-    <input type="hidden" name="date_debut" value="{{ emprunt_data['date_debut'] }}">
-    <input type="hidden" name="duree" value="{{ emprunt_data['duree'] }}">
-    <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
-    <input type="hidden" name="id_adherent" value="{{ adherent.id_adherent }}">
-    <input type="hidden" name="remarques" value="{{ emprunt_data['remarques'] }}">
-    <p><strong>Checklist :</strong>
-    {% if checklist %}
-        <ul style="list-style-type: none; padding-left: 0;">
-        {% for item in checklist %}
-            <li>
-                <input type="checkbox" id="check_{{ loop.index }}" name="checklist_{{ loop.index }}" required>
-                <label for="check_{{ loop.index }}">{{ item }}</label>
-            </li>
-        {% endfor %}
-        </ul>
-    </p>
-    {% else %}
-    <p>Aucune checklist disponible pour ce matériel.</p>
-    {% endif %}
+        <div class="mb-3">
+            <label><strong>Durée :</strong></label>
+            <p>{{ emprunt_data['duree'] }} semaines</p>
+        </div>
 
+        <div class="mb-3">
+            <label><strong>Date de retour :</strong></label>
+            <p>[à compléter en fonction de la durée]</p>
+        </div>
 
-    <button type="submit">Confirmer l'Emprunt</button>
-</form>
+        <!-- Matériel emprunté -->
+        <div class="mb-3">
+            <label><strong>Matériel :</strong></label>
+            <p>{{ materiel.numero_materiel }} - {{ materiel.nom_materiel }}</p>
+        </div>
 
+        <!-- Liste des accessoires -->
+        <div class="mb-3">
+            <label><strong>Accessoires inclus :</strong></label>
+            {% if accessoires %}
+                <ul class="list-unstyled">
+                    {% for item in accessoires %}
+                        <li>
+                            <label for="check_{{ loop.index }}">- {{ item }}</label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucun accessoire pour ce matériel.</p>
+            {% endif %}
+        </div>
 
+        <!-- Informations sur l'adhérent -->
+        <div class="mb-3">
+            <label><strong>Adhérent :</strong></label>
+            <p>{{ adherent.prenom }} {{ adherent.nom }}</p>
+        </div>
 
-<form method="GET" action="{{ url_for('create_emprunt') }}">
-    <button type="submit">Modifier les informations</button>
-</form>
+        <!-- Localisation du matériel -->
+        <div class="mb-3">
+            <label><strong>Localisation du matériel :</strong></label>
+            <p>{{ materiel.localisation }}</p>
+        </div>
 
-<a href="{{ url_for('get_emprunts') }}">Retour à la liste des emprunts</a>
+        <!-- Champs cachés pour envoyer les données -->
+        <input type="hidden" name="date_debut" value="{{ emprunt_data['date_debut'] }}">
+        <input type="hidden" name="duree" value="{{ emprunt_data['duree'] }}">
+        <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
+        <input type="hidden" name="id_adherent" value="{{ adherent.id_adherent }}">
+        <input type="hidden" name="remarques" value="{{ emprunt_data['remarques'] }}">
 
+        <!-- Checklist -->
+        <div class="mb-3">
+            <label><strong>Checklist :</strong></label>
+            {% if checklist %}
+                <ul class="list-unstyled">
+                    {% for item in checklist %}
+                        <li>
+                            <input type="checkbox" id="checklist_{{ loop.index }}" name="checklist_{{ loop.index }}" class="form-check-input" required>
+                            <label for="checklist_{{ loop.index }}" class="form-check-label">{{ item }}</label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucune checklist disponible pour ce matériel.</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label><strong>Rappel sur la sécurité :</strong></label>
+            <p>Niveau de danger (de 1 min à 3 max) : {{ materiel.niveau_danger }} </p>
+            <p>Précautions : {{ materiel.securite }} </p>
+        </div>
+
+        <!-- Coût estimé (placeholder pour une valeur dynamique) -->
+        <div class="mb-3">
+            <label><strong>Coût estimé :</strong></label>
+            <p>[Coût calculé ici]</p>
+        </div>
+
+        <!-- Boutons de confirmation -->
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">Confirmer l'Emprunt</button>
+            <a href="{{ url_for('create_emprunt') }}" class="btn btn-secondary">Recommencer</a>
+        </div>
+    </form>
+
+    <div class="mt-3">
+        <a href="{{ url_for('get_emprunts') }}" class="btn btn-secondary">Retour à la liste des emprunts</a>
+    </div>
+</div>
 
 {% endblock %}
