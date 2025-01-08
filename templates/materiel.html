@@ -278,15 +278,6 @@
     </div>
 
 
-    <div class="card mb-4">
-        <div class="card-header">
-            Avis des utilisateurs
-        </div>
-        <div class="card-body">
-            (de 1 à 5) : {{ materiel.avis_client }} 
-        </div>
-    </div>
-
     
     <!-- Formulaire de modification -->
     <form action="{{ url_for('edit_materiel_get', numero_materiel=materiel.numero_materiel) }}" method="get">

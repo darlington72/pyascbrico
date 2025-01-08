@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import app,db
-from models import Adherent
+from models import Adherent, Emprunt
 from datetime import datetime
 import csv
 import os
@@ -11,26 +11,53 @@ def get_adherents():
     adherents = Adherent.query.all()  # Récupère tout de la base de données
     return render_template('adherents.html', adherents=adherents)
 
+
+@app.route('/adherents/<int:numero_asc>')
+def get_adherent(numero_asc):
+
+    adherent = Adherent.query.filter_by(numero_asc=numero_asc).first()
+    if not adherent:
+        flash('L adherent demandé n\'existe pas.', 'danger')
+        return redirect(url_for('get_adherents'))
+
+    emprunt_historique = Emprunt.query.filter_by(id_adherent=adherent.id_adherent).all()
+
+    return render_template('adherent.html', adherent=adherent,emprunt_historique=emprunt_historique)
+
 @app.route('/adherents/add', methods=['GET', 'POST'])
 def ajouter_adherent():
     if request.method == 'POST':
+        numero_asc = int(request.form['numero_asc'])
         nom = request.form['nom']
         prenom = request.form['prenom']
         email = request.form['email']
-        statut = request.form['statut']
+        #statut = request.form['statut']
         telephone = request.form['telephone']
+        portable = request.form['portable']
 
-        depuis_str = request.form.get('depuis')
-        depuis = datetime.strptime(depuis_str, '%Y-%m-%d').date() if depuis_str else None
+        #depuis_str = request.form.get('depuis')
+        #depuis = datetime.strptime(depuis_str, '%Y-%m-%d').date() if depuis_str else None
+
+        # Vérifier si un adhérent avec le même numéro ASC existe déjà dans la base de données
+        existing_adherent = Adherent.query.filter_by(numero_asc=numero_asc).first()
+        # l'adherent exsite on le met a jour
+        if existing_adherent:
+            flash('L adherent avec ce numero ASC existe deja.', 'danger')
+            return redirect(url_for('get_adherents'))
 
         # Créez un nouvel objet Adherent
         nouvel_adherent = Adherent(
+            numero_asc=numero_asc,
             nom=nom,
             prenom=prenom,
             email=email,
-            statut=statut,
+            statut=None,
             telephone=telephone,
-            depuis=depuis
+            portable=portable,
+            depuis=None,
+            blame=0,
+            badge=None,
+            valide_asc=True
         )
 
         try:
@@ -43,6 +70,50 @@ def ajouter_adherent():
             flash('Erreur lors de l\'ajout de l\'adhérent: ' + str(e), 'danger')
 
     return render_template('ajouter_adherent.html')
+
+
+@app.route('/adherents/edit/<int:numero_asc>', methods=['GET'])
+def edit_adherent_get(numero_asc):
+
+    adherent = Adherent.query.filter_by(numero_asc=numero_asc).first()
+
+    if not adherent:
+        flash('L adherent n\'existe pas.', 'danger')
+        return redirect(url_for('get_adherents'))
+
+    return render_template('modifier_adherent.html', adherent=adherent)
+
+@app.route('/adherents/edit/<int:numero_asc>', methods=['POST'])
+def edit_adherent_post(numero_asc):
+
+    adherent = Adherent.query.filter_by(numero_asc=numero_asc).first()
+
+    if not adherent:
+        flash('L adherent n\'existe pas.', 'danger')
+        return redirect(url_for('get_adherents'))
+
+    # Récupérer les nouvelles données depuis le formulaire
+    adherent.nom = request.form['nom']
+    adherent.telephone = request.form['telephone']
+    adherent.portable = request.form['portable']
+    adherent.email = request.form['email']
+    adherent.blame = request.form.get('blame', type=int)
+    adherent.valide_asc = True if request.form.get('valide_asc') else False
+    
+    # ------------------------------------------------------------------------------------------
+    # verifier toutes les erreurs possibles
+    # ------------------------------------------------------------------------------------------
+
+
+    # ------------------------------------------------------------------------------------------
+    # envoyer
+    # ------------------------------------------------------------------------------------------
+
+    db.session.commit()
+
+    flash('Adhérent modifié avec succès!', 'success')
+    return redirect(url_for('get_adherent', numero_asc=adherent.numero_asc))
+
 
 ALLOWED_EXTENSIONS = {'csv'}  # Types de fichiers autorisés
 
@@ -119,6 +190,8 @@ def load_adherents_from_csv(csv_file_path):
                 statut=row['Statut'],
                 telephone=row['Tél. bureau'],
                 depuis=depuis,
+                blame=0,
+                portable=None,
                 badge=None  
             )
 

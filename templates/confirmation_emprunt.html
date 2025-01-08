@@ -17,12 +17,12 @@
 
         <div class="mb-3">
             <label><strong>Durée :</strong></label>
-            <p>{{ emprunt_data['duree'] }} semaines</p>
+            <p>{{ emprunt_data['duree'] }} semaine(s)</p>
         </div>
 
         <div class="mb-3">
             <label><strong>Date de retour :</strong></label>
-            <p>[à compléter en fonction de la durée]</p>
+            <p>{{ emprunt_data['date_fin'] }}</p>
         </div>
 
         <!-- Matériel emprunté -->
@@ -92,7 +92,7 @@
         <!-- Coût estimé (placeholder pour une valeur dynamique) -->
         <div class="mb-3">
             <label><strong>Coût estimé :</strong></label>
-            <p>[Coût calculé ici]</p>
+            <p>{{ emprunt_data['cout_estime'] }} €</p>
         </div>
 
         <!-- Boutons de confirmation -->

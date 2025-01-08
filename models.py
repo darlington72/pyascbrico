@@ -101,19 +101,6 @@ class Materiel(db.Model):
                 f"Catégorie: {self.categorie}, Type d'énergie: {self.type_energie}, "
                 f"Avis Client: {self.avis_client}>")
 
-    def set_avis_client(self, note):
-        """Définit la note du client après validation.
-
-        Args:
-            note (float): La note à attribuer.
-
-        Raises:
-            ValueError: Si la note n'est pas entre 1 et 5.
-        """
-        if note < 1 or note > 5:
-            raise ValueError("La note doit être entre 1 et 5.")
-        self.avis_client = note
-
 
 class Adherent(db.Model):
     """Modèle représentant un adhérent.
@@ -127,8 +114,10 @@ class Adherent(db.Model):
         email (str): Adresse email de l'adhérent.
         statut (str): Statut de l'adhérent.
         telephone (str): Numéro de téléphone de l'adhérent.
+        portable (str): Numéro de téléphone portable de l'adhérent.
         depuis (date): Date d'adhésion.
         badge (str): Identifiant de badge de l'adhérent.
+        blame (int):  Nombre de blame de l'adherent.
     """
 
     __tablename__ = 'adherents'
@@ -142,8 +131,10 @@ class Adherent(db.Model):
     email = db.Column(db.String(100),  nullable=False)
     statut = db.Column(db.String(100))
     telephone = db.Column(db.String(15), nullable=True)
+    portable = db.Column(db.String(15), nullable=True)
     depuis = db.Column(db.Date)
     badge = db.Column(db.String(100))
+    blame = db.Column(db.Integer)
 
 class Consommable(db.Model):
     """Modèle représentant un consommable.

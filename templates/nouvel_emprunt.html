@@ -23,9 +23,9 @@
         <div class="card mb-4">
             <div class="card-header">Materiel</div>
             <div class="card-body">
-                <label for="materiel-select">Matériel :</label>
+                <label for="materiel-select" class="form-label">Matériel :</label>
 
-                <select class="selectpicker" data-live-search="true">
+                <select class="selectpicker" data-live-search="true" name="materiel" required>
                     {% for materiel in materiels %}
                         <option value="{{ materiel.id_materiel }}">{{ materiel.numero_materiel }} - {{ materiel.nom_materiel }}</option>
                     {% endfor %}
@@ -34,22 +34,45 @@
             </div>
         </div>
 
+        <div class="card mb-4">
+            <div class="card-header">Membre</div>
+            <div class="card-body">
+                <label for="materiel-select" class="form-label">Membre :</label>
+
+                <select class="selectpicker" data-live-search="true" name="adherent" required>
+                    {% for adherent in adherents %}
+                        <option value="{{ adherent.id_adherent }}">{{ adherent.prenom }}  {{ adherent.nom }}</option>
+                    {% endfor %}
+                </select>
+                  
+            </div>
+        </div>
 
 
-        <label for="adherent">Adhérent :</label>
-        <select name="adherent" required>
-            {% for adherent in adherents %}
-                <option value="{{ adherent.id_adherent }}">{{ adherent.prenom }} {{ adherent.nom }}</option>
-            {% endfor %}
-        </select>
+        <div class="card mb-4">
+            <div class="card-header">Consommable</div>
+            <div class="card-body">
 
-        <label for="remarques">Remarques :</label>
-        <textarea name="remarques"></textarea>
+                  
+            </div>
+        </div>
 
-        <button type="submit">Confirmer</button>
+        <div class="card mb-4">
+            <div class="card-header">Remarque</div>
+            <div class="card-body">
+                <textarea class="form-control" id="remarques" name="remarques"></textarea>             
+            </div>
+        </div>
+
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success">Confirmer</button>
+        </div>
+
+
     </form>
 
-    <a href="{{ url_for('get_emprunts') }}">Retour à la liste des emprunts</a>
+    <a href="{{ url_for('get_emprunts') }}" class="btn btn-secondary mt-3">Retour à la liste des emprunts</a>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

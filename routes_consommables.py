@@ -6,7 +6,6 @@ from models import Consommable
 @app.route('/consommables', methods=['GET'])
 def get_consommables():
     consommables = Consommable.query.all()
-    #return jsonify([consommable.as_dict() for consommable in consommables])
     return render_template('consommables.html', consommables=consommables)
 
 @app.route('/consommables', methods=['POST'])

@@ -8,33 +8,30 @@
     <h1>Ajouter un Adhérent</h1>
     <form method="POST">
         <div class="form-group">
-            <label for="nom">Nom</label>
+            <label for="nom">Nom *</label>
             <input type="text" class="form-control" id="nom" name="nom" required>
         </div>
         <div class="form-group">
-            <label for="prenom">Prénom</label>
+            <label for="prenom">Prénom *</label>
             <input type="text" class="form-control" id="prenom" name="prenom" required>
         </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+        <div class="mb-3">
+            <label for="numero_asc" class="form-label">Numéro ASC *</label>
+            <input type="number" step="1" min="0" class="form-control" id="numero_asc" name="numero_asc" required>
         </div>
         <div class="form-group">
-            <label for="statut">Statut</label>
-            <select class="form-control" id="statut" name="statut" required>
-                <option value="cie">CIE</option>
-                <option value="retraite">Retraite</option>
-                <option value="non_cie">Non CIE</option>
-            </select>
+            <label for="portable">Portable *</label>
+            <input type="text" class="form-control" id="portable" name="portable" required>
         </div>
         <div class="form-group">
             <label for="telephone">Téléphone</label>
             <input type="text" class="form-control" id="telephone" name="telephone">
         </div>
         <div class="form-group">
-            <label for="depuis">Date d'adhésion</label>
-            <input type="date" class="form-control" id="depuis" name="depuis" required>
+            <label for="email">Email *</label>
+            <input type="email" class="form-control" id="email" name="email" required>
         </div>
+
         <button type="submit" class="btn btn-primary">Ajouter</button>
         <a href="{{ url_for('get_adherents') }}" class="btn btn-secondary">Annuler</a>
     </form>

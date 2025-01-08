@@ -16,11 +16,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="numero_materiel" class="form-label">Numéro du Matériel *</label>
-                    <input type="number" step="1" class="form-control" id="numero_materiel" name="numero_materiel" required>
+                    <input type="number" step="1" min="0" class="form-control" id="numero_materiel" name="numero_materiel" required>
                 </div>
                 <div class="mb-3">
                     <label for="prix_location_semaine" class="form-label">Prix Location Semaine *</label>
-                    <input type="number" step="1" class="form-control" id="prix_location_semaine" name="prix_location_semaine" required>
+                    <input type="number" step="1" min="0" class="form-control" id="prix_location_semaine" name="prix_location_semaine" required>
                 </div>
                 <div class="mb-3">
                     <label for="localisation" class="form-label">Localisation</label>
@@ -38,7 +38,7 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label for="poids" class="form-label">Poids (kg)</label>
-                    <input type="number" step="0.01" class="form-control" id="poids" name="poids">
+                    <input type="number" step="0.01" min="0" class="form-control" id="poids" name="poids">
                 </div>
                 <div class="mb-3">
                     <label for="dimensions" class="form-label">Dimensions (L x l x H, cm)</label>
@@ -134,7 +134,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="nb_heure" class="form-label">Nombre d'heures</label>
-                    <input type="number" step="1" class="form-control" id="nb_heure" name="nb_heure" value="0" >
+                    <input type="number" step="1" min="0" class="form-control" id="nb_heure" name="nb_heure" value="0" >
                 </div>
             </div>
         </div>
@@ -152,7 +152,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="prix_achat" class="form-label">Prix d'achat</label>
-                    <input type="number" step="0.01" class="form-control" id="prix_achat" name="prix_achat" value="0" >
+                    <input type="number" step="0.01" min="0" class="form-control" id="prix_achat" name="prix_achat" value="0" >
                 </div>
                 <div class="mb-3">
                     <label for="facture" class="form-label">Facture</label>

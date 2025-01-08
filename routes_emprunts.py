@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import app,db
 from models import Emprunt,Adherent,Materiel,Statut_Emprunt,TypeEnergie,Categorie,Etat,Type_Paiement, Consommable
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @app.route('/emprunts')
 def get_emprunts():
@@ -16,17 +16,10 @@ def create_emprunt():
     if request.method == 'POST':
         # Récupérer les données du formulaire
         date_debut = request.form['date_debut']
-        duree = request.form['duree']
+        duree = int(request.form.get("duree"))
         id_materiel = request.form['materiel']
         id_adherent = request.form['adherent']
         remarques = request.form.get('remarques', '')
-
-        # Créer un dictionnaire avec les données pour les passer à la confirmation
-        emprunt_data = {
-            'date_debut': date_debut,
-            'duree': duree,
-            'remarques': remarques,
-        }
 
         materiel = Materiel.query.filter_by(id_materiel=id_materiel).first()
         adherent = Adherent.query.filter_by(id_adherent=id_adherent).first()
@@ -41,7 +34,45 @@ def create_emprunt():
         if materiel.accessoires_inclus:
             accessoires = [item.strip() for item in materiel.accessoires_inclus.split(',') if item.strip()]   
 
-        
+        # Calcul de la date de fin en fonction de la durée
+        date_debut = datetime.strptime(date_debut, "%Y-%m-%d")
+        date_fin = (date_debut + timedelta(days=7*duree)).strftime("%Y-%m-%d")
+
+        # Estimation du cout 
+        cout_estime = duree * materiel.prix_location_semaine
+
+        # Créer un dictionnaire avec les données pour les passer à la confirmation
+        emprunt_data = {
+            'date_debut': request.form['date_debut'],
+            'duree': duree,
+            'remarques': remarques,
+            'date_fin': date_fin,
+            'cout_estime':cout_estime
+        }
+
+        # ---------------------------------------------------------------------------
+        # Verifier toutes les erreurs possibles 
+        # ---------------------------------------------------------------------------
+        # etat de l'adherent
+        if adherent.valide_asc != True:
+            flash('Impossible. L adherent n est pas valide.', 'danger')
+            return redirect(url_for('get_emprunts'))  
+
+        # etat de l'adherent
+        if int(adherent.blame) == 3:
+            flash('Impossible. L adherent est banni.', 'danger')
+            return redirect(url_for('get_emprunts'))  
+
+        # etat du materiel
+        if materiel.etat != Etat.ok:
+            flash('Impossible. Le matériel est en panne ou reformé.', 'danger')
+            return redirect(url_for('get_emprunts'))  
+
+        # statut d'emprunt du materiel sur ces dates
+        emprunt_en_cours    = Emprunt.query.filter_by(id_materiel=materiel.id_materiel, statut=Statut_Emprunt.en_cours).first()
+        emprunt_reserve     = Emprunt.query.filter_by(id_materiel=materiel.id_materiel, statut=Statut_Emprunt.reserve).all()
+
+
 
         return render_template('confirmation_emprunt.html', emprunt_data=emprunt_data,materiel=materiel,checklist=checklist,
         adherent=adherent,accessoires=accessoires)
