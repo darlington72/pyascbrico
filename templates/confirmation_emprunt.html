@@ -11,6 +11,10 @@
 
         <!-- Affichage des informations générales -->
         <div class="mb-3">
+            <label><strong>Type (emprunt immédiat ou reservation) :</strong></label>
+            <p>{{ emprunt_data['statut'].value }}</p>
+        </div>
+        <div class="mb-3">
             <label><strong>Date de début :</strong></label>
             <p>{{ emprunt_data['date_debut'] }}</p>
         </div>
@@ -59,12 +63,28 @@
             <p>{{ materiel.localisation }}</p>
         </div>
 
+        <!-- Consommables -->
+        <div class="mb-3">
+            <label><strong>Consommables :</strong></label>
+            {% if consommables %}
+                <ul>
+                    {% for consommable in consommables %}
+                        <li>Nom : {{ consommable.nom_consommable }} - Description : {{ consommable.description }} - Quantité dispo :  {{ consommable.quantite_disponible }} - Coût : {{ consommable.prix }} €</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucun consommable emprunté.</p>
+            {% endif %}
+        </div>
+
         <!-- Champs cachés pour envoyer les données -->
         <input type="hidden" name="date_debut" value="{{ emprunt_data['date_debut'] }}">
         <input type="hidden" name="duree" value="{{ emprunt_data['duree'] }}">
         <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
         <input type="hidden" name="id_adherent" value="{{ adherent.id_adherent }}">
         <input type="hidden" name="remarques" value="{{ emprunt_data['remarques'] }}">
+        <input type="hidden" name="consommables_ids" value="{{ emprunt_data['consommables_ids'] }}">
+        <input type="hidden" name="statut" value="{{ emprunt_data['statut'].value }}">
 
         <!-- Checklist -->
         <div class="mb-3">
@@ -93,6 +113,11 @@
         <div class="mb-3">
             <label><strong>Coût estimé :</strong></label>
             <p>{{ emprunt_data['cout_estime'] }} €</p>
+        </div>
+
+        <div class="mb-3">
+            <label><strong>Remarques :</strong></label>
+            <p>{{ emprunt_data['remarques'] }}</p>
         </div>
 
         <!-- Boutons de confirmation -->

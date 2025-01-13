@@ -50,10 +50,16 @@
 
 
         <div class="card mb-4">
-            <div class="card-header">Consommable</div>
+            <div class="card-header">Consommable (ignorer si c'est une réservation)</div>
             <div class="card-body">
 
-                  
+                <!-- Consommables dynamiques (aucun consommable par défaut) -->
+                <div id="consommables-container">
+                    <!-- Aucun consommable par défaut -->
+                </div>
+
+                <button type="button" class="btn btn-primary" id="add-consommable-btn">Ajouter un consommable</button>
+                            
             </div>
         </div>
 
@@ -90,4 +96,57 @@
             $('.selectpicker').selectpicker();
         });
     </script>
+        
+    <script>
+        let consommableCount = 0; // Initialisation du compteur de consommables
+
+        // Fonction pour ajouter un consommable
+        document.getElementById('add-consommable-btn').addEventListener('click', function() {
+            consommableCount++; // Incrémenter le compteur de consommables
+
+            // Créer un nouveau champ de consommable avec un bouton de suppression
+            const newConsommable = document.createElement('div');
+            newConsommable.classList.add('consommable-item');
+            newConsommable.innerHTML = `
+                <label for="consommables-${consommableCount}">Consommable ${consommableCount}:</label>
+                <select name="consommables[]" id="consommables-${consommableCount}" class="selectpicker" data-live-search="true">
+                    {% for consommable in consommables %}
+                        <option value="{{ consommable.id_consommable }}">{{ consommable.nom_consommable }}</option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="remove-consommable-btn btn btn-danger btn-sm">Supprimer</button>
+            `;
+            
+            // Ajouter ce champ au conteneur
+            document.getElementById('consommables-container').appendChild(newConsommable);
+
+            // Initialiser le selectpicker sur le nouvel élément
+            $('.selectpicker').selectpicker('refresh');
+        });
+
+        // Fonction pour supprimer un consommable
+        document.getElementById('consommables-container').addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('remove-consommable-btn')) {
+                // Supprimer le div contenant le consommable
+                event.target.parentElement.remove();
+
+                // Recalculer le nombre de consommables restants et mettre à jour le compteur
+                consommableCount = document.querySelectorAll('.consommable-item').length;
+
+                // Mettre à jour le numéro de chaque consommable restant (important pour les IDs uniques)
+                let index = 1;
+                document.querySelectorAll('.consommable-item').forEach(function(item) {
+                    const select = item.querySelector('select');
+                    const label = item.querySelector('label');
+                    select.id = `consommables-${index}`; // Mettre à jour l'ID
+                    label.textContent = `Consommable ${index}:`; // Mettre à jour le texte du label
+                    index++;
+                });
+
+                // Réinitialiser les selectpickers après suppression
+                $('.selectpicker').selectpicker('refresh');
+            }
+        });
+    </script>
+
 {% endblock %}

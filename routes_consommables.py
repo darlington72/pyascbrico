@@ -11,12 +11,16 @@ def get_consommables():
 @app.route('/consommables', methods=['POST'])
 def create_consommable():
 
-    nom_consommable = "test"
-    prix=1
+    nom_consommable = request.form['nom_consommable']
+    description = request.form['description']
+    quantite_disponible = request.form.get('quantite_disponible', type=int)
+    prix = request.form.get('prix', type=float)
 
     nouveau_consommable = Consommable(
         nom_consommable=nom_consommable,
         prix=prix,
+        quantite_disponible=quantite_disponible,
+        description=description
     )
 
     db.session.add(nouveau_consommable)

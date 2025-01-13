@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Détails de l'emprunt {{ emprunt.id_emprunt }} {% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Détail de l'emprunt n°{{ emprunt.id_emprunt }}</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">Statut de l'emprunt</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="date_vidange" class="form-label">Statut </label>
+                <input type="text" class="form-control" id="statut" name="statut" value="{{ emprunt.statut.value }}" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Dates et durées</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="date_vidange" class="form-label">Date de début</label>
+                <input type="date" class="form-control" id="date_debut" name="date_debut" value="{{ emprunt.date_debut }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="duree" class="form-label">Nombre de semaines</label>
+                <input type="number" step="1" min="1" max="2" class="form-control" id="duree" name="duree" value="{{ emprunt.duree }}" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Materiel emprunté</div>
+        <div class="card-body">
+            <a href="{{ url_for('get_materiel', numero_materiel=materiel.numero_materiel) }}">{{ materiel.numero_materiel }} - {{ materiel.nom_materiel }}</a>    
+        </div>
+    </div>
+
+    <!-- Personne -->
+    <div class="card mb-4">
+        <div class="card-header">Adhérent</div>
+        <div class="card-body">
+            <a href="{{ url_for('get_adherent', numero_asc=adherent.numero_asc) }}">{{ adherent.prenom }} {{ adherent.nom }}</a>    
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Consommable </div>
+        <div class="card-body">
+
+            <!-- Consommables -->
+            <div class="mb-3">
+                {% if consommables %}
+                    <ul>
+                        {% for consommable in consommables %}
+                            <li>Nom : {{ consommable.nom_consommable }} - Description : {{ consommable.description }} - Quantité dispo :  {{ consommable.quantite_disponible }} - Coût : {{ consommable.prix }} €</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Aucun consommable emprunté.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Remarques</div>
+        <div class="card-body">
+            <textarea class="form-control" id="remarques" name="remarques" readonly>{{ emprunt.remarques }}</textarea>             
+        </div>
+    </div>
+
+
+    
+    <div class="card mb-4">
+        <div class="card-header">Actions</div>
+        <div class="card-body">
+            {% if annule %}
+            <form method="POST" action="{{ url_for('cancel_emprunt',id_emprunt=emprunt.id_emprunt) }}" id="empruntForm">
+                <!-- Boutons de confirmation -->
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-danger">Annuler l'Emprunt</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    
+
+    <a href="{{ url_for('get_emprunts') }}" class="btn btn-secondary">Retour à la liste des emprunts</a>
+
+</div>
+{% endblock %}

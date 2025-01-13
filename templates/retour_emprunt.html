@@ -1,46 +1,131 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Retour de l'emprunt</h1>
+<div class="container my-5">
+    <h1 class="mb-4">Retour de l'emprunt n°{{ emprunt.id_emprunt }}</h1>
+    <form method="POST">
 
-<p><strong>Matériel emprunté :</strong> {{ emprunt.materiel.nom_materiel }}</p>
-<p><strong>Adhérent :</strong> {{ emprunt.adherent.nom }} {{ emprunt.adherent.prenom }}</p>
-<p><strong>Date de début :</strong> {{ emprunt.date_debut }}</p>
-<p><strong>Durée réelle de l'emprunt :</strong> {{ emprunt.duree_reelle_en_semaines() }} semaines</p>
-<p><strong>Coût total de l'emprunt :</strong> {{ emprunt.cout_emprunt() }} €</p>
+        <div class="card mb-4">
+            <div class="card-header">Adhérent</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="materiel" class="form-label"><strong>Nom : </strong>{{ emprunt.adherent.prenom }} {{ emprunt.adherent.nom }}</label>
+                </div>
+            </div>
+        </div>
 
-{% if consommables %}
-    <p><strong>Consommables associés :</strong></p>
-    <ul>
-    {% for consommable in consommables %}
-        <li>{{ consommable.nom_consommable }} ({{ consommable.quantite_disponible }} disponibles) - Prix : {{ consommable.prix }} €</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>Aucun consommable n'a été emprunté avec ce matériel.</p>
-{% endif %}
+        <div class="card mb-4">
+            <div class="card-header">Matériel</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="materiel" class="form-label"><strong>N° - Nom : </strong>{{ emprunt.materiel.numero_materiel }} - {{ emprunt.materiel.nom_materiel }}</label>
+                </div>
+                <div class="mb-3">
+                    <label><strong>Accessoires inclus :</strong></label>
+                    {% if accessoires %}
+                        <ul class="list-unstyled">
+                            {% for item in accessoires %}
+                                <li>
+                                    <label for="check_{{ loop.index }}">- {{ item }}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Aucun accessoire pour ce matériel.</p>
+                    {% endif %}
+                </div>
+                <!-- Checklist -->
+                <div class="mb-3">
+                    <label><strong>Checklist :</strong></label>
+                    {% if checklist %}
+                        <ul class="list-unstyled">
+                            {% for item in checklist %}
+                                <li>
+                                    <input type="checkbox" id="checklist_{{ loop.index }}" name="checklist_{{ loop.index }}" class="form-check-input" required>
+                                    <label for="checklist_{{ loop.index }}" class="form-check-label">{{ item }}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Aucune checklist disponible pour ce matériel.</p>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="nb_heure">Nombre d'heures utilisé :</label>
+                    <input type="number" id="nb_heure" name="nb_heure" class="form-control" step="1" min="0" required>
+                    <label for="nb_heure">Matériel rendu en l'état :</label>
+                    <select class="form-select" id="etat" name="etat" required>
+                        {% for etat in etats %}
+                            <option value="{{ etat }}" {% if etat == emprunt.materiel.etat.value %}selected{% endif %}>{{ etat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            
+                <div class="mb-3">
+                    <label for="remarques">Remarques :</label>
+                    <textarea id="remarques" name="remarques" class="form-control" rows="3">{{ emprunt.remarques }}</textarea>
+                </div>
+            </div>
+        </div>
 
-<form method="POST">
-    <div class="form-group">
-        <label for="remarques">Remarques sur l'état du matériel :</label>
-        <textarea id="remarques" name="remarques" class="form-control" rows="4"></textarea>
-    </div>
 
-    <!-- Champ pour modifier le montant payé -->
-    <div class="form-group">
-        <label for="montant_paye">Montant payé :</label>
-        <input type="number" id="montant_paye" name="montant_paye" class="form-control" value="{{ emprunt.montant_paye }}" step="0.01" min="0" required>
-    </div>
+        <div class="card mb-4">
+            <div class="card-header">Consommable </div>
+            <div class="card-body">
+    
+                <!-- Consommables -->
+                <div class="mb-3">
+                    {% if consommables %}
+                        <ul>
+                            {% for consommable in consommables %}
+                                <li>Nom : {{ consommable.nom_consommable }} - Description : {{ consommable.description }} - Coût : {{ consommable.prix }} €</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Aucun consommable emprunté.</p>
+                    {% endif %}
+                </div>
+    
+            </div>
+        </div>
 
-    <label for="type_paiement">Paiement par :</label>
-    <select id="type_paiement" name="type_paiement" required>
-        <option value="">Sélectionnez un type de paiement</option>
-        {% for type in type_paiement %}
-            <option value="{{ type }}">{{ type }}</option>
-        {% endfor %}
-    </select><br>
+        <div class="card mb-4">
+            <div class="card-header">Dates, durées et coût</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <p><strong>Date de début :</strong> {{ emprunt.date_debut }}</p>
+                    <p><strong>Durée saisie de l'emprunt :</strong> {{ emprunt.duree }} semaine(s)</p>
+                    <p><strong>Durée réelle de l'emprunt :</strong> {{ duree_reelle }} semaine(s)</p>
+                </div>
+            </div>
+        </div>       
 
-    <button type="submit" class="btn btn-success">Confirmer le retour</button>
-</form>
+        <div class="card mb-4">
+            <div class="card-header">Paiement</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <p><label for="materiel" class="form-label"><strong>Coût du matériel / semaine : </strong>{{ emprunt.materiel.prix_location_semaine }} €</label></p>
+                    <p><strong>Coût réel de l'emprunt :</strong> {{ cout_reel }} €</p>
+                </div>
+                <div class="mb-3">
+                    <label for="montant_paye">Montant payé :</label>
+                    <input type="number" id="montant_paye" name="montant_paye" class="form-control" value="{{ emprunt.montant_paye }}" step="0.01" min="0" required>
+                </div>
+            
+                <div class="mb-3">
+                    <label for="type_paiement">Paiement par :</label>
+                    <select class="form-select" id="type_paiement" name="type_paiement" required>
+                        <option value="">Sélectionnez un type de paiement</option>
+                        {% for type in type_paiement %}
+                            <option value="{{ type }}">{{ type }}</option>
+                        {% endfor %}
+                    </select><br>
+                </div>
+            </div>
+        </div> 
+        
+        <button type="submit" class="btn btn-success">Confirmer le retour</button>
+    </form>
+</div>
 
 {% endblock %}

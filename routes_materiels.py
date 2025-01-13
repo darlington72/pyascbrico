@@ -145,7 +145,13 @@ def get_materiel(numero_materiel):
 
     emprunt_en_cours    = Emprunt.query.filter_by(id_materiel=materiel.id_materiel, statut=Statut_Emprunt.en_cours).first()
     emprunt_reserve     = Emprunt.query.filter_by(id_materiel=materiel.id_materiel, statut=Statut_Emprunt.reserve).all()
-    emprunt_historique  = Emprunt.query.filter_by(id_materiel=materiel.id_materiel, statut=Statut_Emprunt.retourne).all()
+    emprunt_historique  = Emprunt.query.filter(
+        Emprunt.id_materiel == materiel.id_materiel,
+        or_(
+            Emprunt.statut == Statut_Emprunt.retourne,
+            Emprunt.statut == Statut_Emprunt.annule
+        )
+    ).all()
 
     # Récupérer et traiter la checklist
     if materiel.checklist:

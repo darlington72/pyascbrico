@@ -166,21 +166,6 @@ class Consommable(db.Model):
     marque = db.Column(db.String(100))
     facture = db.Column(db.String(255))
 
-    def as_dict(self):
-        """Convertit l'instance en dictionnaire."""
-        return {
-            'id_consommable': self.id_consommable,
-            'nom_consommable': self.nom_consommable,
-            'description': self.description,
-            'prix': self.prix,
-            'date_achat': self.date_achat,
-            'quantite_disponible': self.quantite_disponible,
-            'categorie': self.categorie.value if self.categorie else None,
-            'reference': self.reference,
-            'marque': self.marque,
-            'facture': self.facture
-        }
-
 class Statut_Emprunt(Enum):
     """Enum représentant les statuts possibles d'emprunts."""
     en_cours = "en_cours"
@@ -252,44 +237,6 @@ class Emprunt(db.Model):
             value (list): Liste d'identifiants de consommables à convertir en JSON.
         """
         self.consommables_ids = json.dumps(value)
-
-    def duree_reelle_en_semaines(self):
-        """Calcule la durée réelle de l'emprunt en semaines en utilisant les numéros de semaine."""
-        if self.date_retour_effective:
-            # Utiliser la date de retour effective si renseignée
-            date_retour = self.date_retour_effective
-        else:
-            # Sinon, utiliser la date actuelle
-            date_retour = datetime.today().date()
-
-        # Obtenir les numéros de semaine pour la date de début (emprunt) et la date de retour
-        semaine_debut = self.date_debut.isocalendar()[1]  # Numéro de semaine de la date de début
-        semaine_retour = date_retour.isocalendar()[1]  # Numéro de semaine de la date de retour
-
-        # Si l'emprunt traverse une année, ajuster pour les années différentes
-        if date_retour.year > self.date_debut.year:
-            # Calculer la différence en semaines en tenant compte des changements d'année
-            nb_semaines = (52 - semaine_debut + 1) + semaine_retour
-        else:
-            # Sinon, simple différence de numéros de semaine
-            nb_semaines = semaine_retour - semaine_debut + 1
-
-        return nb_semaines-1
-
-    def cout_emprunt(self):
-        """Calcule le coût total de l'emprunt (matériel + consommables)."""
-        # Calcul du coût de la location du matériel
-        cout_location = self.materiel.prix_location_semaine * self.duree_reelle_en_semaines()
-
-        # Calcul du coût des consommables
-        cout_consommables = 0
-        for consommable_id in self.consommables_list:
-            consommable = Consommable.query.get(consommable_id)
-            if consommable:
-                cout_consommables += consommable.prix * self.duree_reelle_en_semaines()
-
-        # Coût total de l'emprunt
-        return cout_location + cout_consommables
 
 
 class Statut_Reparation(Enum):

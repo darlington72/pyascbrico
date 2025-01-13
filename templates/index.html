@@ -1,17 +1,31 @@
 {% extends 'base.html' %}
 
-{% block title %}Liste des Matériels{% endblock %}
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <ul>
-        {% for category, message in messages %}
-            <li class="{{ category }}">{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+{% block title %}ASC Bricolage{% endblock %}
 
 {% block content %}
+
+<div class="container my-5">
+
+    <div class="card mb-4">
+        <div class="card-header">Actions</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <a href="{{ url_for('create_emprunt') }}" class="btn btn-success">Créer un nouvel emprunt</a>
+            </div>
+            <div class="mb-3">
+                <a href="{{ url_for('get_emprunts') }}" class="btn btn-primary">Liste des emprunts</a>
+            </div>
+            <div class="mb-3">
+                <a href="{{ url_for('get_materiels') }}" class="btn btn-primary">Liste des matériels</a>
+            </div>
+            <div class="mb-3">
+                <a href="{{ url_for('get_adherents') }}" class="btn btn-primary">Liste des adhérents</a>
+            </div>
+            <div class="mb-3">
+                <a href="{{ url_for('get_consommables') }}" class="btn btn-primary">Liste des consommables</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

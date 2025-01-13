@@ -3,33 +3,75 @@
 {% block title %}Consommable{% endblock %}
 
 {% block content %}
-<h2>Liste des Consommables</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Prix</th>
-        <th>Actions</th>
-    </tr>
-    {% for consommable in consommables %}
-    <tr>
-        <td>{{ consommable.id_consommable }}</td>
-        <td>{{ consommable.nom_consommable }}</td>
-        <td>{{ consommable.prix }}</td>
-        <td>
-            <form action="{{ url_for('delete_consommable', id=consommable.id_consommable) }}" method="post" style="display:inline;">
-                <button type="submit">Supprimer</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
 
-<h3>Ajouter un Consommable</h3>
-<form action="{{ url_for('create_consommable') }}" method="post">
-    <input type="text" name="nom_consommable" placeholder="Nom" required>
-    <input type="number" name="prix" placeholder="Prix" required>
-    <button type="submit">Ajouter</button>
-</form>
+
+<div class="container mt-5">
+
+    <!-- Tableau des matériels -->
+    <table id="materielTable" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+                <!-- Ajoutez d'autres colonnes si nécessaire -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for consommable in consommables %}
+            <tr>
+                <td>{{ consommable.nom_consommable }}</td>
+                <td>{{ consommable.description }}</td>
+                <td>{{ consommable.prix }}</td>
+                <td>{{ consommable.quantite_disponible }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="{{ url_for('create_consommable') }}" method="post" class="container mt-5">
+        <div class="card mb-4">
+            <div class="card-header">Ajouter un consommable</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="nom_consommable" class="form-label">Nom *</label>
+                    <input type="text" class="form-control" id="nom_consommable" name="nom_consommable" placeholder="Entrez le nom du consommable" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description *</label>
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Entrez la description du consommable" required>
+                </div>
+                <div class="mb-3">
+                    <label for="prix" class="form-label">Prix (€) *</label>
+                    <input type="number" class="form-control" id="prix" name="prix" min="0.01" step="0.01" placeholder="Prix en euros" required>
+                </div>
+                <div class="mb-3">
+                    <label for="quantite_disponible" class="form-label">Quantité *</label>
+                    <input type="number" class="form-control" id="quantite_disponible" name="quantite_disponible" min="1" step="1" placeholder="Quantité disponible" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Ajouter</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!-- Initialisation de DataTables -->
+<script>
+    $(document).ready(function() {
+        // Initialisation de DataTables
+        var table = $('#materielTable').DataTable({
+            "paging": true,           // Pagination activée
+            "searching": true,        // Recherche en temps réel activée
+            "ordering": true,         // Tri activé
+            "info": true,             // Affichage de l'information de pagination
+            "lengthMenu": [200,100,50],  // Options de nombre d'éléments par page
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
+            }
+        });
+    });
+</script>
 
 {% endblock %}

@@ -12,7 +12,7 @@
         </div>
         <div class="card-body">
             {% if emprunt_en_cours %}
-
+                <p>Le matériel est en cours d'emprunt</p>
                 <a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}" class="btn btn-success">Faire le retour de {{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</a>
             {% else %}
                 <p>Aucun emprunt en cours</p>
