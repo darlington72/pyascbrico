@@ -1,10 +1,12 @@
-from flask import render_template, request, redirect, url_for, flash, send_from_directory, abort
+from flask import render_template, request, redirect, url_for, flash, send_from_directory, abort, Response
 from app import app,db  # Importer l'instance de l'application
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 from models import Materiel, Categorie, TypeEnergie, Emprunt, Statut_Emprunt, Etat
 from sqlalchemy import or_
+import csv
+from io import StringIO
 
 # Configuration pour les fichiers
 
@@ -317,3 +319,29 @@ def telecharger_vue_eclatee(numero_materiel):
     # Envoyer le fichier
     filename = os.path.basename(file_path)  # Extraire le nom du fichier
     return send_from_directory(os.path.dirname(file_path), filename, as_attachment=True)
+
+
+@app.route('/materiels/export_csv')
+def export_materiels_csv():
+    # Récupérer tous les matériels
+    materiels = Materiel.query.all()
+
+    # Créer un objet StringIO pour écrire dans le flux mémoire
+    si = StringIO()
+    writer = csv.writer(si)
+
+    # Écrire l'en-tête du CSV
+    writer.writerow(['id_materiel','numero_materiel', 'nom_materiel', 'description','prix_location_semaine','etat','date_achat','categorie','poids','reference','num_serie','date_vidange','date_entretien','nb_heure','marque','prix_achat','lieu_achat','localisation','type_energie','dimensions','accessoires_inclus','niveau_danger','securite','checklist'])
+
+    # Écrire les données des matériels
+    for materiel in materiels:
+        writer.writerow([materiel.id_materiel,materiel.numero_materiel, materiel.nom_materiel, materiel.description,materiel.prix_location_semaine,materiel.etat.value,materiel.date_achat,materiel.categorie.value,materiel.poids,materiel.reference,materiel.num_serie,materiel.date_vidange,materiel.date_entretien,materiel.nb_heure,materiel.marque,materiel.prix_achat,materiel.prix_achat,materiel.lieu_achat,materiel.localisation,materiel.type_energie.value,materiel.dimensions,materiel.accessoires_inclus,materiel.niveau_danger,materiel.securite,materiel.checklist ])
+
+    # Revenir au début du flux mémoire pour le lire
+    si.seek(0)
+
+    # Créer une réponse avec le fichier CSV
+    response = Response(si.getvalue(), mimetype='text/csv')
+    response.headers['Content-Disposition'] = 'attachment; filename=materiels.csv'
+
+    return response

@@ -7,124 +7,102 @@
 
 <a href="{{ url_for('create_emprunt') }}" class="btn btn-success">Créer un nouvel emprunt</a>
 
-<h2>Les retours</h2>
-<table id="materielTable" class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID Détails</th>
-            <th>Date de début</th>
-            <th>Durée</th>
-            <th>Matériel</th>
-            <th>Adhérent</th>
-            <th>Retour</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for emprunt_en_cours in emprunts_retour %}
-            <tr>
-                <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">{{ emprunt_en_cours.id_emprunt }}</a></td>
-                <td>{{ emprunt_en_cours.date_debut }}</td>
-                <td>{{ emprunt_en_cours.duree }}</td>
-                <td>{{ emprunt_en_cours.materiel.nom_materiel }}</td>
-                <td>{{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</td>
-                <td><a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">Faire le retour</a></td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container mt-5">
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Les retours à faire
+        </div>
+        <div class="card-body">
+            <table id="materielTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID Détails</th>
+                        <th>Date de début</th>
+                        <th>Durée</th>
+                        <th>Matériel</th>
+                        <th>Adhérent</th>
+                        <th>Retour</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emprunt_en_cours in emprunts_retour %}
+                        <tr>
+                            <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">{{ emprunt_en_cours.id_emprunt }}</a></td>
+                            <td>{{ emprunt_en_cours.date_debut }}</td>
+                            <td>{{ emprunt_en_cours.duree }}</td>
+                            <td>{{ emprunt_en_cours.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</td>
+                            <td><a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">Faire le retour</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
-<h2>Les réservations</h2>
-<table id="materielTableReservation" class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID Détails</th>
-            <th>Date de début</th>
-            <th>Durée</th>
-            <th>Matériel</th>
-            <th>Adhérent</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for emprunt_reserve in emprunts_reserve %}
-            <tr>
-                <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_reserve.id_emprunt) }}">{{ emprunt_reserve.id_emprunt }}</a></td>
-                <td>{{ emprunt_reserve.date_debut }}</td>
-                <td>{{ emprunt_reserve.duree }}</td>
-                <td>{{ emprunt_reserve.materiel.nom_materiel }}</td>
-                <td>{{ emprunt_reserve.adherent.prenom }} {{ emprunt_reserve.adherent.nom }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="card mb-4">
+        <div class="card-header">
+            Les réservations à valider
+        </div>
+        <div class="card-body">
+            <table id="materielTableReservation" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID Détails</th>
+                        <th>Date de début</th>
+                        <th>Durée</th>
+                        <th>Matériel</th>
+                        <th>Adhérent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emprunt_reserve in emprunts_reserve %}
+                        <tr>
+                            <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_reserve.id_emprunt) }}">{{ emprunt_reserve.id_emprunt }}</a></td>
+                            <td>{{ emprunt_reserve.date_debut }}</td>
+                            <td>{{ emprunt_reserve.duree }}</td>
+                            <td>{{ emprunt_reserve.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_reserve.adherent.prenom }} {{ emprunt_reserve.adherent.nom }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<h2>En cours</h2>
-<table id="materielTableEncours" class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Date de début</th>
-            <th>Durée</th>
-            <th>Matériel</th>
-            <th>Adhérent</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for emprunt_courant in emprunts_courant %}
-            <tr>
-                <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_courant.id_emprunt) }}">{{ emprunt_courant.id_emprunt }}</a></td>
-                <td>{{ emprunt_courant.date_debut }}</td>
-                <td>{{ emprunt_courant.duree }}</td>
-                <td>{{ emprunt_courant.materiel.nom_materiel }}</td>
-                <td>{{ emprunt_courant.adherent.prenom }} {{ emprunt_courant.adherent.nom }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="card mb-4">
+        <div class="card-header">
+            Les emprunts en cours
+        </div>
+        <div class="card-body">
+            <table id="materielTableEncours" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date de début</th>
+                        <th>Durée</th>
+                        <th>Matériel</th>
+                        <th>Adhérent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emprunt_courant in emprunts_courant %}
+                        <tr>
+                            <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_courant.id_emprunt) }}">{{ emprunt_courant.id_emprunt }}</a></td>
+                            <td>{{ emprunt_courant.date_debut }}</td>
+                            <td>{{ emprunt_courant.duree }}</td>
+                            <td>{{ emprunt_courant.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_courant.adherent.prenom }} {{ emprunt_courant.adherent.nom }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<h2>Historique</h2>
-<table id="materielTable_historique" class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Date de début</th>
-            <th>Durée</th>
-            <th>Matériel</th>
-            <th>Adhérent</th>
-            <th>Montant payé</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for emprunt_termine in emprunts_termine %}
-            <tr>
-                <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_termine.id_emprunt) }}">{{ emprunt_termine.id_emprunt }}</a></td>
-                <td>{{ emprunt_termine.date_debut }}</td>
-                <td>{{ emprunt_termine.duree }}</td>
-                <td>{{ emprunt_termine.materiel.nom_materiel }}</td>
-                <td>{{ emprunt_termine.adherent.prenom }} {{ emprunt_termine.adherent.nom }}</td>
-                <td>{{ emprunt_termine.montant_paye }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<!-- Initialisation de DataTables -->
-<script>
-    $(document).ready(function() {
-        // Initialisation de DataTables
-        var table = $('#materielTableEncours').DataTable({
-            "paging": true,           // Pagination activée
-            "searching": true,        // Recherche en temps réel activée
-            "ordering": true,         // Tri activé
-            "info": true,             // Affichage de l'information de pagination
-            "lengthMenu": [200,100,-1],  // Options de nombre d'éléments par page
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
-            }
-        });
-    });
-</script>
-
+</div>
 
 <!-- Initialisation de DataTables -->
 <script>
@@ -164,12 +142,12 @@
 <script>
     $(document).ready(function() {
         // Initialisation de DataTables
-        var table = $('#materielTable_historique').DataTable({
+        var table = $('#materielTableEncours').DataTable({
             "paging": true,           // Pagination activée
             "searching": true,        // Recherche en temps réel activée
             "ordering": true,         // Tri activé
             "info": true,             // Affichage de l'information de pagination
-            "lengthMenu": [50,100,-1],  // Options de nombre d'éléments par page
+            "lengthMenu": [200,100,-1],  // Options de nombre d'éléments par page
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
             }

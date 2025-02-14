@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Emprunts{% endblock %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Historique
+        </div>
+        <div class="card-body">
+            <table id="materielTable_historique" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date de début</th>
+                        <th>Durée</th>
+                        <th>Matériel</th>
+                        <th>Adhérent</th>
+                        <th>Montant payé</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emprunt_termine in emprunts_termine %}
+                        <tr>
+                            <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_termine.id_emprunt) }}">{{ emprunt_termine.id_emprunt }}</a></td>
+                            <td>{{ emprunt_termine.date_debut }}</td>
+                            <td>{{ emprunt_termine.duree }}</td>
+                            <td>{{ emprunt_termine.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_termine.adherent.prenom }} {{ emprunt_termine.adherent.nom }}</td>
+                            <td>{{ emprunt_termine.montant_paye }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- Initialisation de DataTables -->
+<script>
+    $(document).ready(function() {
+        // Initialisation de DataTables
+        var table = $('#materielTable_historique').DataTable({
+            "paging": true,           // Pagination activée
+            "searching": true,        // Recherche en temps réel activée
+            "ordering": true,         // Tri activé
+            "info": true,             // Affichage de l'information de pagination
+            "lengthMenu": [50,100,-1],  // Options de nombre d'éléments par page
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
+            }
+        });
+    });
+</script>
+
+{% endblock %}

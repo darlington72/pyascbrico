@@ -55,6 +55,11 @@
         <div class="mb-3">
             <label><strong>Adhérent :</strong></label>
             <p>{{ adherent.prenom }} {{ adherent.nom }}</p>
+            <p>Tel fixe : {{ adherent.telephone }}</p>
+            <p>Tel portable : {{ adherent.portable }}</p>
+            {% if not adherent.portable %}
+                <p><strong>!! Veuillez remplir le numéro de portable de l'adhérent (page adherent "modifier") !!</strong></p>
+            {% endif %}
         </div>
 
         <!-- Localisation du matériel -->

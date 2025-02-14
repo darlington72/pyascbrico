@@ -36,6 +36,15 @@ def get_emprunts():
     return render_template('emprunts.html', emprunts=emprunts,emprunts_courant=emprunts_courant,emprunts_retour=emprunts_retour,emprunts_reserve=emprunts_reserve,emprunts_termine=emprunts_termine)
 
 
+@app.route('/emprunts/historique')
+def get_historique_emprunts():
+    emprunts_termine = Emprunt.query.filter(
+        or_(Emprunt.statut == Statut_Emprunt.retourne, Emprunt.statut == Statut_Emprunt.annule)
+    ).all()
+
+    return render_template('historique_emprunts.html',emprunts_termine=emprunts_termine)
+
+
 @app.route('/emprunts/<int:id_emprunt>')
 def get_emprunt(id_emprunt):
 
@@ -57,15 +66,20 @@ def get_emprunt(id_emprunt):
     if emprunt.statut == Statut_Emprunt.en_cours or emprunt.statut == Statut_Emprunt.reserve:
         annule = True
 
-    en_cours = False
+    retour = False
     if emprunt.statut == Statut_Emprunt.en_cours:
-        en_cours = True
+        # Calculer la semaine et l'année de la date de retour
+        date_retour = emprunt.date_debut + timedelta(weeks=emprunt.duree)
+        year_retour, week_retour = date_retour.isocalendar()[0], date_retour.isocalendar()[1]
+        
+        # Obtenir l'année et la semaine actuelles
+        current_year, current_week = datetime.now().isocalendar()[0], datetime.now().isocalendar()[1]
 
-    reserve = False
-    if emprunt.statut == Statut_Emprunt.reserve:
-        reserve = True
+        # Comparer année et semaine
+        if year_retour < current_year or (year_retour == current_year and week_retour <= current_week):
+            retour = True
 
-    return render_template('emprunt.html', emprunt=emprunt,materiel=materiel,adherent=adherent,annule=annule,consommables=consommables)
+    return render_template('emprunt.html', emprunt=emprunt,materiel=materiel,adherent=adherent,annule=annule,retour=retour,consommables=consommables)
 
 @app.route('/emprunts/create', methods=['GET', 'POST'])
 def create_emprunt():

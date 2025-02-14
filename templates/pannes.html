@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des pannes{% endblock %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Liste des matériels en panne
+        </div>
+        <div class="card-body">
+            <table id="materielTable_panne" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Nom</th>
+                        <th>Categorie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for materiel in materiels_en_panne %}
+                    <tr>
+                        <td><a href="{{ url_for('get_materiel', numero_materiel=materiel.numero_materiel) }}">{{ materiel.numero_materiel }}</a></td>
+                        <td>{{ materiel.nom_materiel }}</td>
+                        <td>{{ materiel.categorie.name if materiel.categorie else 'N/A' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- Initialisation de DataTables -->
+<script>
+    $(document).ready(function() {
+        // Initialisation de DataTables
+        var table = $('#materielTable_panne').DataTable({
+            "paging": true,           // Pagination activée
+            "searching": true,        // Recherche en temps réel activée
+            "ordering": true,         // Tri activé
+            "info": true,             // Affichage de l'information de pagination
+            "lengthMenu": [50,100,-1],  // Options de nombre d'éléments par page
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
+            }
+        });
+    });
+</script>
+
+{% endblock %}

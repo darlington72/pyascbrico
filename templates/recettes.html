@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Recettes{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Graphique à barres -->
+    <div class="chart-container">
+        <canvas id="graphiqueRecettes"></canvas>
+    </div>
+
+</div>
+
+<script>
+    var semaines = {{ semaines | tojson }};
+    var typesPaiement = {{ types_paiement | tojson }};
+    var recettesData = {{ recettes | tojson }};
+
+    // Préparer les datasets pour Chart.js
+    var datasets = typesPaiement.map(function(type_paiement) {
+        return {
+            label: type_paiement,
+            data: semaines.map(function(semaine) {
+                var recetteSemaine = recettesData.find(r => r.semaine === semaine);
+                return recetteSemaine ? recetteSemaine.recettes[type_paiement] : 0;
+            }),
+            backgroundColor: getRandomColor(),
+            borderColor: getRandomColor(),
+            borderWidth: 1
+        };
+    });
+
+    // Initialisation du graphique avec Chart.js
+    var ctx = document.getElementById('graphiqueRecettes').getContext('2d');
+    var graphiqueRecettes = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: semaines,  // Semaine 1 à 52
+            datasets: datasets  // Recettes pour chaque type de paiement
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            stacked: true,  // Empiler les barres pour chaque semaine
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Semaine'
+                    },
+                    barThickness: 25,  // Largeur des barres
+                    categoryPercentage: 0.8  // Contrôler l'espacement entre les barres
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Recettes (€)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Fonction pour générer une couleur aléatoire
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+</script>
+
+
+{% endblock %}

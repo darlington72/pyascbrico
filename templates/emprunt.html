@@ -77,6 +77,13 @@
     <div class="card mb-4">
         <div class="card-header">Actions</div>
         <div class="card-body">
+            {% if retour %}
+                <!-- Formulaire de modification -->
+                <form action="{{ url_for('retour_emprunt', id_emprunt=emprunt.id_emprunt) }}" method="get">
+                    <button type="submit" class="btn btn-primary">Faire le retour</button>
+                </form>
+            {% endif %}
+            <p></p>
             {% if annule %}
             <form method="POST" action="{{ url_for('cancel_emprunt',id_emprunt=emprunt.id_emprunt) }}" id="empruntForm">
                 <!-- Boutons de confirmation -->

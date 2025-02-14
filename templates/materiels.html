@@ -4,6 +4,9 @@
 
 {% block content %}
 
+<a href="{{ url_for('create_materiels_get') }}" class="btn btn-success">Ajouter un Matériel</a>
+
+<a href="{{ url_for('export_materiels_csv') }}" class="btn btn-primary">Exporter la liste des matériels en CSV</a>
 
 <div class="container">
 
@@ -68,8 +71,6 @@
     });
 </script>
 
-
-<a href="{{ url_for('create_materiels_get') }}" class="btn btn-success">Ajouter un Matériel</a>
 
 
 
