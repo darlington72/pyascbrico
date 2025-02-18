@@ -70,22 +70,23 @@
 
 
         <div class="card mb-4">
-            <div class="card-header">Consommable </div>
+            <div class="card-header">Consommable</div>
             <div class="card-body">
-    
                 <!-- Consommables -->
                 <div class="mb-3">
                     {% if consommables %}
-                        <ul>
+                        <ul id="consommables-list">
                             {% for consommable in consommables %}
-                                <li>Nom : {{ consommable.nom_consommable }} - Description : {{ consommable.description }} - Coût : {{ consommable.prix }} €</li>
+                                <li id="consommable-{{ consommable.id }}">
+                                    <span>Nom : {{ consommable.nom_consommable }} - Description : {{ consommable.description }} - Coût : {{ consommable.prix }} €</span>
+                                    <button class="btn btn-success btn-sm" onclick="removeConsommable({{ emprunt.id_emprunt }}, {{ consommable.id_consommable }})">Récupérer</button>
+                                </li>
                             {% endfor %}
                         </ul>
                     {% else %}
                         <p>Aucun consommable emprunté.</p>
                     {% endif %}
                 </div>
-    
             </div>
         </div>
 
@@ -127,5 +128,25 @@
         <button type="submit" class="btn btn-success">Confirmer le retour</button>
     </form>
 </div>
+
+<script>
+    function removeConsommable(empruntId, consommableId) {
+        // Send an AJAX request to remove the consommable
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/remove-consommable/" + empruntId + "/" + consommableId, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                window.location.reload()
+            } else {
+                alert("Failed to remove consommable.");
+            }
+        };
+        
+        xhr.send();
+    }
+</script>
+
 
 {% endblock %}

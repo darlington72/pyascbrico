@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from app import app,db
 from models import Emprunt,Adherent,Materiel,Statut_Emprunt,TypeEnergie,Categorie,Etat,Type_Paiement, Consommable
 from datetime import datetime, timedelta
@@ -56,6 +56,9 @@ def get_emprunt(id_emprunt):
     materiel = Materiel.query.filter_by(id_materiel=emprunt.id_materiel).first()
     adherent = Adherent.query.filter_by(id_adherent=emprunt.id_adherent).first()
 
+    # Obtenir l'année et la semaine actuelles
+    current_year, current_week = datetime.now().isocalendar()[0], datetime.now().isocalendar()[1]
+
     consommables = []
     for consommable_id in emprunt.consommables_ids:
         consommable = Consommable.query.filter_by(id_consommable=consommable_id).first()
@@ -71,18 +74,23 @@ def get_emprunt(id_emprunt):
         # Calculer la semaine et l'année de la date de retour
         date_retour = emprunt.date_debut + timedelta(weeks=emprunt.duree)
         year_retour, week_retour = date_retour.isocalendar()[0], date_retour.isocalendar()[1]
-        
-        # Obtenir l'année et la semaine actuelles
-        current_year, current_week = datetime.now().isocalendar()[0], datetime.now().isocalendar()[1]
 
         # Comparer année et semaine
         if year_retour < current_year or (year_retour == current_year and week_retour <= current_week):
             retour = True
 
-    return render_template('emprunt.html', emprunt=emprunt,materiel=materiel,adherent=adherent,annule=annule,retour=retour,consommables=consommables)
+
+    reservation_act = False
+
+    if emprunt.statut == Statut_Emprunt.reserve and emprunt.date_debut.isocalendar()[1] == current_week:
+        reservation_act = True
+        
+
+    return render_template('emprunt.html', emprunt=emprunt,materiel=materiel,adherent=adherent,annule=annule,retour=retour,reservation_act=reservation_act,consommables=consommables)
 
 @app.route('/emprunts/create', methods=['GET', 'POST'])
-def create_emprunt():
+@app.route('/emprunts/create/<int:id_emprunt>', methods=['GET', 'POST'])
+def create_emprunt(id_emprunt=None):
     if request.method == 'POST':
         # Récupérer les données du formulaire
         date_debut = request.form['date_debut']
@@ -148,19 +156,20 @@ def create_emprunt():
                 return redirect(url_for('get_emprunts'))  
 
         # disponible sur cette date
-        emprunts = Emprunt.query.filter(
-            Emprunt.id_materiel == materiel.id_materiel,  # Argument positionnel
-            Emprunt.statut.in_([Statut_Emprunt.en_cours, Statut_Emprunt.reserve])
-        ).all()
-        conflit = 0
-        for emprunt in emprunts:
-            date_fin_emprunt = (emprunt.date_debut + timedelta(weeks=emprunt.duree))
-            if (emprunt.date_debut < date_fin.date() and date_fin_emprunt > date_debut.date()):
-                conflit = 1
-                break
-        if conflit:
-            flash('Impossible. Le matériel est déjà reservé sur ce créneau.', 'danger')
-            return redirect(url_for('get_emprunts'))  
+        if id_emprunt == None:
+            emprunts = Emprunt.query.filter(
+                Emprunt.id_materiel == materiel.id_materiel,  # Argument positionnel
+                Emprunt.statut.in_([Statut_Emprunt.en_cours, Statut_Emprunt.reserve])
+            ).all()
+            conflit = 0
+            for emprunt in emprunts:
+                date_fin_emprunt = (emprunt.date_debut + timedelta(weeks=emprunt.duree))
+                if (emprunt.date_debut < date_fin.date() and date_fin_emprunt > date_debut.date()):
+                    conflit = 1
+                    break
+            if conflit:
+                flash('Impossible. Le matériel est déjà reservé sur ce créneau.', 'danger')
+                return redirect(url_for('get_emprunts'))  
 
         # disponible immediatemment
         emprunts_en_cours = Emprunt.query.filter_by(id_materiel=id_materiel,statut=Statut_Emprunt.en_cours).first()
@@ -183,24 +192,40 @@ def create_emprunt():
             'date_fin': date_fin_str,
             'cout_estime':cout_estime,
             'statut':statut,
-            'consommables_ids':consommables_ids
+            'consommables_ids':consommables_ids,
+            'id_emprunt':id_emprunt,
         }
 
         return render_template('confirmation_emprunt.html', emprunt_data=emprunt_data,materiel=materiel,checklist=checklist,
-        adherent=adherent,accessoires=accessoires,consommables=consommables)
+        adherent=adherent,accessoires=accessoires,consommables=consommables,id_emprunt=id_emprunt)
 
-    # Récupérer les matériels et adhérents pour le formulaire
-    materiels = Materiel.query.all()
-    adherents = Adherent.query.all()
-    consommables = Consommable.query.all()
 
-    current_date = datetime.now().strftime('%Y-%m-%d')
+    # Filtrer les consommables dont quantite_disponible > 0
+    consommables = Consommable.query.filter(Consommable.quantite_disponible > 0).all()
 
-    return render_template('nouvel_emprunt.html', materiels=materiels, adherents=adherents,current_date=current_date,consommables=consommables)
+    emprunt_res = None
+    if id_emprunt:
+        emprunt_res = Emprunt.query.filter_by(id_emprunt=id_emprunt).first()
+
+    if emprunt_res:
+        # Récupérer les matériels et adhérents pour le formulaire
+        materiels = Materiel.query.filter(Materiel.id_materiel == emprunt_res.id_materiel).all()
+        adherents = Adherent.query.filter(Adherent.id_adherent == emprunt_res.id_adherent).all()
+        duree = emprunt_res.duree
+        current_date = emprunt_res.date_debut
+    else:
+        # Récupérer les matériels et adhérents pour le formulaire
+        materiels = Materiel.query.filter(Materiel.etat == Etat.ok).all()
+        adherents = Adherent.query.all()
+        duree = 1
+        current_date = datetime.now().strftime('%Y-%m-%d')
+
+    return render_template('nouvel_emprunt.html', materiels=materiels, adherents=adherents,current_date=current_date,duree=duree,consommables=consommables)
 
 
 @app.route('/emprunts/confirm', methods=['POST'])
-def confirm_emprunt():
+@app.route('/emprunts/confirm/<int:id_emprunt>', methods=['POST'])
+def confirm_emprunt(id_emprunt=None):
     # Récupérer les données de l'emprunt depuis le formulaire de confirmation
     duree = request.form['duree']
     id_materiel = request.form['id_materiel']
@@ -213,24 +238,37 @@ def confirm_emprunt():
     date_loc_str = request.form.get('date_debut')
     date_loc = datetime.strptime(date_loc_str, '%Y-%m-%d').date() if date_loc_str else None
 
-    # Créer l'objet Emprunt
-    nouvel_emprunt = Emprunt(
-        date_debut=date_loc,
-        duree=duree,
-        statut=statut,
-        id_materiel=id_materiel,
-        id_adherent=id_adherent,
-        remarques=remarques,
-        consommables_ids=consommables_ids
-    )
+    if id_emprunt == None:
+        # Créer l'objet Emprunt
+        nouvel_emprunt = Emprunt(
+            date_debut=date_loc,
+            duree=duree,
+            statut=statut,
+            id_materiel=id_materiel,
+            id_adherent=id_adherent,
+            remarques=remarques,
+            consommables_ids=consommables_ids
+        )
+        # Ajouter à la base de données
+        db.session.add(nouvel_emprunt)
+    else:
+        emprunt = Emprunt.query.filter_by(id_emprunt=id_emprunt).first()
+        if not emprunt:
+            flash('L emprunt demandé n\'existe pas.', 'danger')
+            return redirect(url_for('get_emprunts'))
+        emprunt.statut = Statut_Emprunt.en_cours
+        emprunt.remarques = remarques
+        emprunt.date_debut = date_loc
+        emprunt.duree = duree
+        emprunt.consommables_ids = consommables_ids
 
-    for consommable_id in consommables_ids:
-        consommable = Consommable.query.filter_by(id_consommable=consommable_id).first()
-        if(consommable):
-            consommable.quantite_disponible = consommable.quantite_disponible - 1
+    if statut == "en_cours":
+        for consommable_id in consommables_ids:
+            consommable = Consommable.query.filter_by(id_consommable=consommable_id).first()
+            if(consommable):
+                consommable.quantite_disponible = consommable.quantite_disponible - 1
 
-    # Ajouter à la base de données
-    db.session.add(nouvel_emprunt)
+
     db.session.commit()
 
     flash('Emprunt créé avec succès!', 'success')
@@ -249,6 +287,13 @@ def cancel_emprunt(id_emprunt):
         return redirect(url_for('get_emprunts'))
 
     emprunt.statut = Statut_Emprunt.annule
+
+    liste_consommables = [int(x) for x in eval(emprunt.consommables_ids)]
+
+    for consommable_id in liste_consommables:
+        consommable = Consommable.query.filter_by(id_consommable=consommable_id).first()
+        if consommable:
+            consommable.quantite_disponible = consommable.quantite_disponible + 1
 
     db.session.commit()
 
@@ -287,11 +332,12 @@ def retour_emprunt(id_emprunt):
     # Calcul du coût des consommables
     consommables = []
     cout_consommables = 0
-    for consommable_id in emprunt.consommables_ids:
-        consommable = Consommable.query.filter_by(id_consommable=consommable_id).first()
-        if(consommable):
-            cout_consommables += consommable.prix
-            consommables.append(consommable)
+    if emprunt.consommables_ids:
+        for consommable_id in emprunt.consommables_ids:
+            consommable = Consommable.query.filter_by(id_consommable=consommable_id).first()
+            if(consommable):
+                cout_consommables += consommable.prix
+                consommables.append(consommable)
 
     # Coût total de l'emprunt
     cout_reel = cout_location + cout_consommables
@@ -305,6 +351,7 @@ def retour_emprunt(id_emprunt):
         emprunt.montant_paye = float(request.form['montant_paye'])
         emprunt.duree = duree_reelle
         emprunt.materiel.nb_heure = emprunt.materiel.nb_heure + int(request.form['nb_heure'])
+        emprunt.remarques = request.form['remarques']
         emprunt.materiel.etat = request.form['etat']
 
         # maj database
@@ -319,3 +366,23 @@ def retour_emprunt(id_emprunt):
     checklist=checklist,accessoires=accessoires)
 
 
+@app.route('/remove-consommable/<int:id_emprunt>/<int:consommable_id>', methods=['POST'])
+def remove_consommable(id_emprunt, consommable_id):
+    emprunt = Emprunt.query.filter_by(id_emprunt=id_emprunt).first()
+    if emprunt and emprunt.statut == Statut_Emprunt.en_cours:
+        # Find the consommable and remove it
+        consommable = None
+        index = 0
+
+        liste_consommables = [int(x) for x in eval(emprunt.consommables_ids)]
+
+        if consommable_id in liste_consommables:
+            consommable = Consommable.query.filter_by(id_consommable=consommable_id).first()
+            if consommable:
+                consommable.quantite_disponible = consommable.quantite_disponible + 1
+                liste_consommables.remove(consommable_id)
+                emprunt.consommables_ids = "[" + ", ".join(f"'{x}'" for x in liste_consommables) + "]"
+                db.session.commit()
+
+            return jsonify(success=True)  # Return a success message
+    return jsonify(success=False), 400

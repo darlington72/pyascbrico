@@ -77,6 +77,11 @@
     <div class="card mb-4">
         <div class="card-header">Actions</div>
         <div class="card-body">
+            {% if reservation_act %}
+            <form action="{{ url_for('create_emprunt', id_emprunt=emprunt.id_emprunt) }}" method="get">
+                <button type="submit" class="btn btn-primary">Confirmer la reservation</button>
+            </form>
+            {% endif %}
             {% if retour %}
                 <!-- Formulaire de modification -->
                 <form action="{{ url_for('retour_emprunt', id_emprunt=emprunt.id_emprunt) }}" method="get">

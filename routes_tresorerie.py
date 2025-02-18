@@ -27,9 +27,6 @@ def recettes():
     # Créer un dictionnaire pour associer chaque type de paiement à son index dans la matrice
     type_paiement_index = {tp.strip().lower(): idx for idx, tp in enumerate(types_paiement)}
 
-    # Debug: Affichage du type de paiement indexé
-    print("Dictionnaire des types de paiement et leurs index:", type_paiement_index)
-
     # Initialiser une matrice 52xN (52 semaines x N types de paiement)
     matrice_recettes = [[0] * len(types_paiement) for _ in range(52)]  # 52 semaines, N types de paiement
 
@@ -39,21 +36,12 @@ def recettes():
             semaine_retour = emprunt.date_retour_effective.isocalendar()[1] - 1  # Convertir en index 0-51
             type_paiement = emprunt.type_paiement.value.strip().lower()  # Normalisation du type de paiement (en minuscules et sans espaces)
 
-            # Debug: Afficher le type de paiement et vérifier l'index
-            print(f"Type de paiement de l'emprunt: {type_paiement}")
-
             # Vérifier si le type de paiement existe dans le dictionnaire
             index_type_paiement = type_paiement_index.get(type_paiement)
-
-            # Debug: Affichage de l'index trouvé
-            print(f"Index trouvé pour le type '{type_paiement}': {index_type_paiement}")
 
             # Si un index valide est trouvé, mettre à jour la matrice
             if index_type_paiement is not None:
                 matrice_recettes[semaine_retour][index_type_paiement] += emprunt.montant_paye
-            else:
-                # Si l'index n'est pas trouvé, logguer une alerte
-                print(f"Avertissement: Le type de paiement '{type_paiement}' n'a pas d'index valide!")
 
     # Préparer les données pour l'affichage
     semaines = list(range(1, 53))  # Les 52 semaines de l'année

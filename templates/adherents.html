@@ -6,6 +6,15 @@
 
 <div class="container">
 
+    <a href="/adherents/add" class="btn btn-success">Ajouter un Adherent</a>
+    <!-- Formulaire pour télécharger le fichier CSV -->
+    <form action="{{ url_for('import_csv') }}" method="POST" enctype="multipart/form-data">
+        <label for="csv_file">Sélectionner un fichier CSV :</label>
+        <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+        <button  class="btn btn-success" type="submit">Importer depuis CSV</button>
+    </form>
+    
+
     <!-- Tableau des matériels -->
     <table id="materielTable" class="table table-bordered table-striped">
         <thead>
@@ -59,13 +68,4 @@
 </script>
 
 </div>
-
-<a href="/adherents/add" class="btn btn-success">Ajouter un Adherent</a>
-<!-- Formulaire pour télécharger le fichier CSV -->
-<form action="{{ url_for('import_csv') }}" method="POST" enctype="multipart/form-data">
-    <label for="csv_file">Sélectionner un fichier CSV :</label>
-    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
-    <button  class="btn btn-success" type="submit">Importer depuis CSV</button>
-</form>
-
 {% endblock %}

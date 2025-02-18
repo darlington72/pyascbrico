@@ -7,7 +7,7 @@
 <!-- Utilisation de Bootstrap pour un design moderne -->
 <div class="container my-5">
     <h1 class="mb-4">Récapitulatif de l'Emprunt</h1>
-    <form method="POST" action="{{ url_for('confirm_emprunt') }}" id="empruntForm">
+    <form method="POST" action="{{ url_for('confirm_emprunt',id_emprunt=id_emprunt) }}" id="empruntForm">
 
         <!-- Affichage des informations générales -->
         <div class="mb-3">
