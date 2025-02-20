@@ -91,8 +91,8 @@
                     {% for emprunt_courant in emprunts_courant %}
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_courant.id_emprunt) }}">{{ emprunt_courant.id_emprunt }}</a></td>
-                            <td>{{ emprunt_courant.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_courant.adherent.prenom }} {{ emprunt_courant.adherent.nom }}</td>
+                            <td>{{ emprunt_courant.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_courant.date_debut }}</td>
                             <td>{{ emprunt_courant.duree }}</td>
                         </tr>
