@@ -13,16 +13,16 @@
         <div class="card-header">
             Les retours à faire
         </div>
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <table id="materielTable" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>ID Détails</th>
-                        <th>Adhérent</th>
-                        <th>Matériel</th>
-                        <th>Date de début</th>
-                        <th>Durée</th>
-                        <th>Retour</th>
+                        <th style="width: 10%;">ID Détails</th>
+                        <th style="width: 25%;">Adhérent</th>
+                        <th style="width: 25%;">Matériel</th>
+                        <th style="width: 20%;">Date de début</th>
+                        <th style="width: 10%;">Durée</th>
+                        <th style="width: 10%;">Retour</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">{{ emprunt_en_cours.id_emprunt }}</a></td>
                             <td>{{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</td>
-                            <td>{{ emprunt_en_cours.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_en_cours.materiel.numero_materiel }} - {{ emprunt_en_cours.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_en_cours.date_debut }}</td>
                             <td>{{ emprunt_en_cours.duree }}</td>
                             <td><a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">Faire le retour</a></td>
@@ -46,7 +46,7 @@
         <div class="card-header">
             Les réservations à valider
         </div>
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <table id="materielTableReservation" class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -62,7 +62,7 @@
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_reserve.id_emprunt) }}">{{ emprunt_reserve.id_emprunt }}</a></td>
                             <td>{{ emprunt_reserve.adherent.prenom }} {{ emprunt_reserve.adherent.nom }}</td>
-                            <td>{{ emprunt_reserve.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_en_cours.materiel.numero_materiel }} - {{ emprunt_reserve.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_reserve.date_debut }}</td>
                             <td>{{ emprunt_reserve.duree }}</td>
                         </tr>
@@ -76,7 +76,7 @@
         <div class="card-header">
             Les emprunts en cours
         </div>
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <table id="materielTableEncours" class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -92,7 +92,7 @@
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_courant.id_emprunt) }}">{{ emprunt_courant.id_emprunt }}</a></td>
                             <td>{{ emprunt_courant.adherent.prenom }} {{ emprunt_courant.adherent.nom }}</td>
-                            <td>{{ emprunt_courant.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_en_cours.materiel.numero_materiel }} - {{ emprunt_courant.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_courant.date_debut }}</td>
                             <td>{{ emprunt_courant.duree }}</td>
                         </tr>
@@ -104,52 +104,17 @@
 
 </div>
 
-<!-- Initialisation de DataTables -->
 <script>
     $(document).ready(function() {
-        // Initialisation de DataTables
-        var table = $('#materielTable').DataTable({
-            "paging": true,           // Pagination activée
-            "searching": true,        // Recherche en temps réel activée
-            "ordering": true,         // Tri activé
-            "info": true,             // Affichage de l'information de pagination
-            "lengthMenu": [200,100,-1],  // Options de nombre d'éléments par page
+        $('.table').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthMenu": [200, 100, -1],
+            "responsive": true,
             "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
-            }
-        });
-    });
-</script>
-
-<!-- Initialisation de DataTables -->
-<script>
-    $(document).ready(function() {
-        // Initialisation de DataTables
-        var table = $('#materielTableReservation').DataTable({
-            "paging": true,           // Pagination activée
-            "searching": true,        // Recherche en temps réel activée
-            "ordering": true,         // Tri activé
-            "info": true,             // Affichage de l'information de pagination
-            "lengthMenu": [200,100,-1],  // Options de nombre d'éléments par page
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
-            }
-        });
-    });
-</script>
-
-<!-- Initialisation de DataTables -->
-<script>
-    $(document).ready(function() {
-        // Initialisation de DataTables
-        var table = $('#materielTableEncours').DataTable({
-            "paging": true,           // Pagination activée
-            "searching": true,        // Recherche en temps réel activée
-            "ordering": true,         // Tri activé
-            "info": true,             // Affichage de l'information de pagination
-            "lengthMenu": [200,100,-1],  // Options de nombre d'éléments par page
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json" // Traduction en français
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/French.json"
             }
         });
     });
