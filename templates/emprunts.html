@@ -18,10 +18,10 @@
                 <thead>
                     <tr>
                         <th>ID Détails</th>
+                        <th>Adhérent</th>
+                        <th>Matériel</th>
                         <th>Date de début</th>
                         <th>Durée</th>
-                        <th>Matériel</th>
-                        <th>Adhérent</th>
                         <th>Retour</th>
                     </tr>
                 </thead>
@@ -29,10 +29,10 @@
                     {% for emprunt_en_cours in emprunts_retour %}
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">{{ emprunt_en_cours.id_emprunt }}</a></td>
+                            <td>{{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</td>
+                            <td>{{ emprunt_en_cours.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_en_cours.date_debut }}</td>
                             <td>{{ emprunt_en_cours.duree }}</td>
-                            <td>{{ emprunt_en_cours.materiel.nom_materiel }}</td>
-                            <td>{{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</td>
                             <td><a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">Faire le retour</a></td>
                         </tr>
                     {% endfor %}
@@ -51,20 +51,20 @@
                 <thead>
                     <tr>
                         <th>ID Détails</th>
+                        <th>Adhérent</th>
+                        <th>Matériel</th>
                         <th>Date de début</th>
                         <th>Durée</th>
-                        <th>Matériel</th>
-                        <th>Adhérent</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for emprunt_reserve in emprunts_reserve %}
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_reserve.id_emprunt) }}">{{ emprunt_reserve.id_emprunt }}</a></td>
+                            <td>{{ emprunt_reserve.adherent.prenom }} {{ emprunt_reserve.adherent.nom }}</td>
+                            <td>{{ emprunt_reserve.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_reserve.date_debut }}</td>
                             <td>{{ emprunt_reserve.duree }}</td>
-                            <td>{{ emprunt_reserve.materiel.nom_materiel }}</td>
-                            <td>{{ emprunt_reserve.adherent.prenom }} {{ emprunt_reserve.adherent.nom }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -81,20 +81,20 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Adhérent</th>
+                        <th>Matériel</th>
                         <th>Date de début</th>
                         <th>Durée</th>
-                        <th>Matériel</th>
-                        <th>Adhérent</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for emprunt_courant in emprunts_courant %}
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_courant.id_emprunt) }}">{{ emprunt_courant.id_emprunt }}</a></td>
-                            <td>{{ emprunt_courant.date_debut }}</td>
-                            <td>{{ emprunt_courant.duree }}</td>
                             <td>{{ emprunt_courant.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_courant.adherent.prenom }} {{ emprunt_courant.adherent.nom }}</td>
+                            <td>{{ emprunt_courant.date_debut }}</td>
+                            <td>{{ emprunt_courant.duree }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
