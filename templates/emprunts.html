@@ -62,7 +62,7 @@
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_reserve.id_emprunt) }}">{{ emprunt_reserve.id_emprunt }}</a></td>
                             <td>{{ emprunt_reserve.adherent.prenom }} {{ emprunt_reserve.adherent.nom }}</td>
-                            <td>{{ emprunt_en_cours.materiel.numero_materiel }} - {{ emprunt_reserve.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_reserve.materiel.numero_materiel }} - {{ emprunt_reserve.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_reserve.date_debut }}</td>
                             <td>{{ emprunt_reserve.duree }}</td>
                         </tr>
@@ -92,7 +92,7 @@
                         <tr>
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_courant.id_emprunt) }}">{{ emprunt_courant.id_emprunt }}</a></td>
                             <td>{{ emprunt_courant.adherent.prenom }} {{ emprunt_courant.adherent.nom }}</td>
-                            <td>{{ emprunt_en_cours.materiel.numero_materiel }} - {{ emprunt_courant.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_courant.materiel.numero_materiel }} - {{ emprunt_courant.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_courant.date_debut }}</td>
                             <td>{{ emprunt_courant.duree }}</td>
                         </tr>

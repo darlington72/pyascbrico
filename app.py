@@ -1,7 +1,9 @@
 from flask import Flask
 from models import db
+import os
 
-UPLOAD_FOLDER = 'uploads'  # Répertoire où vous souhaitez stocker les fichiers
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -24,4 +26,4 @@ from routes_pannes import *
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create tables
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=80)
