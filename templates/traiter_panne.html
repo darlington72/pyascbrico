@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des pannes{% endblock %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+
+    <form method="post">
+        <div class="card mb-4">
+            <div class="card-header">Materiel</div>
+            <div class="card-body">
+                <label for="materiel-select" class="form-label">{{ reparation.materiel.numero_materiel }} - {{ reparation.materiel.nom_materiel }}</label>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">Informations sur la réparation</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="montant">Montant payé :</label>
+                    <input type="number" id="montant" name="montant" class="form-control" value="0" step="0.01" min="0" required>
+                </div>
+                <div class="mb-3">
+                    <label for="montant">Remarques : </label>
+                    <textarea id="remarques" name="remarques" class="form-control" rows="3">{{ reparation.remarques }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">Réparateur</div>
+            <div class="card-body">
+                <select class="selectpicker" data-live-search="true" name="adherent" required>
+                    {% for adherent in adherents %}
+                        <option value="{{ adherent.id_adherent }}">{{ adherent.prenom }}  {{ adherent.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Bouton de soumission -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success">Confirmer la réparation</button>
+        </div>
+
+    </form>
+
+
+    <script>
+        // Initialisation de Bootstrap-Select
+        $(document).ready(function() {
+            // Assurez-vous que le selectpicker est correctement initialisé après le chargement du DOM
+            $('.selectpicker').selectpicker();
+        });
+    </script>
+        
+
+</div>
+
+
+{% endblock %}

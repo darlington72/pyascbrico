@@ -50,24 +50,8 @@
                         <p>Aucune checklist disponible pour ce matériel.</p>
                     {% endif %}
                 </div>
-                <div class="mb-3">
-                    <label for="nb_heure">Nombre d'heures utilisé :</label>
-                    <input type="number" id="nb_heure" name="nb_heure" class="form-control" step="1" min="0" required>
-                    <label for="nb_heure">Matériel rendu en l'état :</label>
-                    <select class="form-select" id="etat" name="etat" required>
-                        {% for etat in etats %}
-                            <option value="{{ etat }}" {% if etat == emprunt.materiel.etat.value %}selected{% endif %}>{{ etat }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            
-                <div class="mb-3">
-                    <label for="remarques">Remarques :</label>
-                    <textarea id="remarques" name="remarques" class="form-control" rows="3">{{ emprunt.remarques }}</textarea>
-                </div>
             </div>
         </div>
-
 
         <div class="card mb-4">
             <div class="card-header">Consommable</div>
@@ -91,7 +75,36 @@
         </div>
 
         <div class="card mb-4">
-            <div class="card-header">Dates, durées et coût</div>
+            <div class="card-header">Retour</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="nb_heure">Nombre d'heures utilisé :</label>
+                    <input type="number" id="nb_heure" name="nb_heure" class="form-control" step="1" min="0" value="1" required>
+                    <label for="nb_heure">Matériel rendu en l'état :</label>
+                    <select class="form-select" id="etat" name="etat" required>
+                        {% for etat in etats %}
+                            <option value="{{ etat }}" {% if etat == emprunt.materiel.etat.value %}selected{% endif %}>{{ etat }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="remarques_panne">Remarques sur la panne (uniquement si matériel est retourné en panne) :</label>
+                    <textarea id="remarques_panne" name="remarques_panne" class="form-control" rows="3"></textarea>
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">Remarques</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="remarques">Remarques :</label>
+                    <textarea id="remarques" name="remarques" class="form-control" rows="3">{{ emprunt.remarques }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">Dates et durées</div>
             <div class="card-body">
                 <div class="mb-3">
                     <p><strong>Date de début :</strong> {{ emprunt.date_debut }}</p>
@@ -110,7 +123,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="montant_paye">Montant payé :</label>
-                    <input type="number" id="montant_paye" name="montant_paye" class="form-control" value="{{ emprunt.montant_paye }}" step="0.01" min="0" required>
+                    <input type="number" id="montant_paye" name="montant_paye" class="form-control" value="{{ cout_reel }}" step="0.01" min="0" required>
                 </div>
             
                 <div class="mb-3">

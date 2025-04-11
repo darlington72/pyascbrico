@@ -3,7 +3,7 @@ from app import app,db  # Importer l'instance de l'application
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
-from models import Materiel, Categorie, TypeEnergie, Emprunt, Statut_Emprunt, Etat
+from models import Materiel, Categorie, TypeEnergie, Emprunt, Statut_Emprunt, Etat, Reparation
 from sqlalchemy import or_
 import csv
 from io import StringIO
@@ -145,6 +145,8 @@ def get_materiel(numero_materiel):
         flash('Le matériel demandé n\'existe pas.', 'danger')
         return redirect(url_for('get_materiels'))
 
+    liste_pannes = Reparation.query.filter_by(id_materiel=materiel.id_materiel).all()
+
     emprunt_en_cours    = Emprunt.query.filter_by(id_materiel=materiel.id_materiel, statut=Statut_Emprunt.en_cours).first()
     emprunt_reserve     = Emprunt.query.filter_by(id_materiel=materiel.id_materiel, statut=Statut_Emprunt.reserve).all()
     emprunt_historique  = Emprunt.query.filter(
@@ -165,7 +167,7 @@ def get_materiel(numero_materiel):
 
 
     return render_template('materiel.html', materiel=materiel,checklist=checklist,emprunt_en_cours=emprunt_en_cours,
-    emprunt_reserve=emprunt_reserve,emprunt_historique=emprunt_historique,accessoires_inclus=accessoires_inclus)
+    emprunt_reserve=emprunt_reserve,emprunt_historique=emprunt_historique,accessoires_inclus=accessoires_inclus,liste_pannes=liste_pannes)
 
 @app.route('/materiels/delete/<int:numero_materiel>', methods=['POST'])
 def delete_materiel(numero_materiel):

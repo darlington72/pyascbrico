@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des pannes{% endblock %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+
+    <form method="post">
+        <div class="card mb-4">
+            <div class="card-header">Materiel</div>
+            <div class="card-body">
+                <label for="materiel-select" class="form-label">Matériel :</label>
+
+                <select class="selectpicker" data-live-search="true" name="materiel" required>
+                    {% for materiel in materiels %}
+                        <option value="{{ materiel.id_materiel }}">{{ materiel.numero_materiel }} - {{ materiel.nom_materiel }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">Description de la panne</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <textarea id="remarques" name="remarques" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bouton de soumission -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success">Confirmer la panne</button>
+        </div>
+
+    </form>
+
+
+    <script>
+        // Initialisation de Bootstrap-Select
+        $(document).ready(function() {
+            // Assurez-vous que le selectpicker est correctement initialisé après le chargement du DOM
+            $('.selectpicker').selectpicker();
+        });
+    </script>
+        
+
+</div>
+
+
+{% endblock %}

@@ -7,12 +7,77 @@
 
 <div class="container mt-5">
 
+
+    <a href="{{ url_for('nouvelle_panne') }}" class="btn btn-primary">Déclarer une nouvelle panne</a>
+
+    <br><br>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Liste des pannes ouvertes
+        </div>
+        <div class="card-body">
+            <table id="panneEnCoursTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Matériel</th>
+                        <th>Remarques</th>
+                        <th>Date de création</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reparation in reparations_en_cours %}
+                    <tr>
+                        <td>{{ reparation.materiel.numero_materiel}} - {{ reparation.materiel.nom_materiel}}</td>
+                        <td>{{ reparation.remarques }}</td>
+                        <td>{{ reparation.date_creation }}</td>
+                        <td><a href="{{ url_for('traiter_panne', id=reparation.id_reparation) }}">réparer</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Liste des pannes terminées
+        </div>
+        <div class="card-body">
+            <table id="panneTermineTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Matériel</th>
+                        <th>Remarques</th>
+                        <th>Montant</th>
+                        <th>Date de création</th>
+                        <th>Date de cloture</th>
+                        <th>Reparateur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reparation in reparations_termine %}
+                    <tr>
+                        <td>{{ reparation.materiel.numero_materiel}} - {{ reparation.materiel.nom_materiel}}</td>
+                        <td>{{ reparation.remarques }}</td>
+                        <td>{{ reparation.montant }}</td>
+                        <td>{{ reparation.date_creation }}</td>
+                        <td>{{ reparation.date_cloture }}</td>
+                        <td>{{ reparation.adherent.prenom }} {{ reparation.adherent.nom }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-header">
             Liste des matériels en panne
         </div>
         <div class="card-body">
-            <table id="materielTable_panne" class="table table-bordered table-striped">
+            <table id="materielTableEnPanne" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Numéro</th>
@@ -35,16 +100,15 @@
 
 </div>
 
-<!-- Initialisation de DataTables -->
 <script>
     $(document).ready(function() {
-        // Initialisation de DataTables
-        var table = $('#materielTable_panne').DataTable({
-            "paging": true,           // Pagination activée
-            "searching": true,        // Recherche en temps réel activée
-            "ordering": true,         // Tri activé
-            "info": true,             // Affichage de l'information de pagination
-            "lengthMenu": [50,100,-1],  // Options de nombre d'éléments par page
+        $('.table').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthMenu": [200, 100, -1],
+            "responsive": true,
         });
     });
 </script>

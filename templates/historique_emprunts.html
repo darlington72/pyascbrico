@@ -29,7 +29,7 @@
                             <td><a href="{{ url_for('get_emprunt', id_emprunt=emprunt_termine.id_emprunt) }}">{{ emprunt_termine.id_emprunt }}</a></td>
                             <td>{{ emprunt_termine.date_debut }}</td>
                             <td>{{ emprunt_termine.duree }}</td>
-                            <td>{{ emprunt_termine.materiel.nom_materiel }}</td>
+                            <td>{{ emprunt_termine.materiel.numero_materiel }} - {{ emprunt_termine.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_termine.adherent.prenom }} {{ emprunt_termine.adherent.nom }}</td>
                             <td>{{ emprunt_termine.montant_paye }}</td>
                         </tr>

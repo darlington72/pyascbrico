@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from app import app,db
-from models import Emprunt,Adherent,Materiel,Statut_Emprunt,TypeEnergie,Categorie,Etat,Type_Paiement, Consommable
+from models import Emprunt,Adherent,Materiel,Statut_Emprunt,TypeEnergie,Categorie,Etat,Type_Paiement, Consommable, Reparation, Statut_Reparation
 from datetime import datetime, timedelta
 import calendar
 from sqlalchemy import or_
@@ -353,6 +353,17 @@ def retour_emprunt(id_emprunt):
         emprunt.materiel.nb_heure = emprunt.materiel.nb_heure + int(request.form['nb_heure'])
         emprunt.remarques = request.form['remarques']
         emprunt.materiel.etat = request.form['etat']
+        remarques_panne = request.form['remarques_panne']
+
+        if request.form['etat'] == "en_panne":
+            date_creation = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
+            nouvelle_rep = Reparation(
+                id_materiel=emprunt.materiel.id_materiel,
+                remarques=remarques_panne,
+                statut=Statut_Reparation.en_cours,
+                date_creation=date_creation
+            )
+            db.session.add(nouvelle_rep)
 
         # maj database
         db.session.commit()

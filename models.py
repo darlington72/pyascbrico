@@ -255,6 +255,8 @@ class Reparation(db.Model):
         id_materiel (int): Identifiant de l'objet matériel réparé.
         remarques (str): Remarques sur la réparation.
         montant (float): Montant de la réparation.
+        date_creation(date): Date de creation.
+        date_cloture(date): Date de cloture.
     """
 
     __tablename__ = 'reparations'
@@ -263,10 +265,13 @@ class Reparation(db.Model):
     id_reparation = db.Column(db.Integer, primary_key=True, autoincrement=True)
     statut = db.Column(db.Enum(Statut_Reparation), index=True)
     id_materiel = db.Column(db.Integer, db.ForeignKey('materiels.id_materiel'))
+    id_adherent = db.Column(db.Integer, db.ForeignKey('adherents.id_adherent'))
     remarques = db.Column(db.Text)
     montant = db.Column(db.Float)
+    date_creation = db.Column(db.Date)
+    date_cloture = db.Column(db.Date)
 
     # Relations
-    #adherent = db.relationship('Adherent', backref='reparations')
-    #materiel = db.relationship('Materiel', backref='reparations')
+    adherent = db.relationship('Adherent', backref='reparations')
+    materiel = db.relationship('Materiel', backref='reparations')
 
