@@ -2,6 +2,7 @@ from enum import Enum
 import json
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 db = SQLAlchemy()
 
@@ -165,6 +166,7 @@ class Consommable(db.Model):
     reference = db.Column(db.String(50), index=True)
     marque = db.Column(db.String(100))
     facture = db.Column(db.String(255))
+    prix_achat = db.Column(db.Float)
 
 class Statut_Emprunt(Enum):
     """Enum représentant les statuts possibles d'emprunts."""
@@ -257,6 +259,7 @@ class Reparation(db.Model):
         montant (float): Montant de la réparation.
         date_creation(date): Date de creation.
         date_cloture(date): Date de cloture.
+        facture (str): Chemin vers le document de facture.
     """
 
     __tablename__ = 'reparations'
@@ -270,8 +273,37 @@ class Reparation(db.Model):
     montant = db.Column(db.Float)
     date_creation = db.Column(db.Date)
     date_cloture = db.Column(db.Date)
+    facture = db.Column(db.String(255))
 
     # Relations
     adherent = db.relationship('Adherent', backref='reparations')
     materiel = db.relationship('Materiel', backref='reparations')
 
+class Caisse(db.Model):
+    """Historique des mouvements de caisse (espèces, chèque, etc.)."""
+    __tablename__ = 'caisse'
+
+    id_mouvement = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    date_mouvement = db.Column(db.DateTime, default=func.now(), nullable=False)
+    montant = db.Column(db.Float, nullable=False)
+    moyen_paiement = db.Column(db.Enum(Type_Paiement), nullable=False)
+    description = db.Column(db.Text)
+
+class TypeDepense(Enum):
+    fourniture = "fourniture"
+    entretien = "entretien"
+    abonnement = "abonnement"
+    transport = "transport"
+    divers = "divers"
+
+class Depense(db.Model):
+    """Modèle pour les dépenses diverses non liées à un emprunt."""
+    __tablename__ = 'depenses'
+
+    id_depense = db.Column(db.Integer, primary_key=True)
+    date_depense = db.Column(db.DateTime, default=func.now(), nullable=False)
+    montant = db.Column(db.Float, nullable=False)
+    type_depense = db.Column(db.Enum(TypeDepense), nullable=False)
+    moyen_paiement = db.Column(db.Enum(Type_Paiement), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    justificatif = db.Column(db.String(255))  # chemin vers une facture/justif PDF ou image

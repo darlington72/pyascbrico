@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Détails de l'emprunt {{ emprunt.id_emprunt }} {% endblock %}
+{% block title %}Détails de l'emprunt {% endblock %}
 
 {% block content %}
 <div class="container my-5">
-    <h1 class="mb-4">Détail de l'emprunt n°{{ emprunt.id_emprunt }}</h1>
+    <h1 class="mb-4">Détail de l'emprunt : {{ materiel.numero_materiel }} - {{ materiel.nom_materiel }} - {{ adherent.nom }}</h1>
 
     <div class="card mb-4">
         <div class="card-header">Statut de l'emprunt</div>

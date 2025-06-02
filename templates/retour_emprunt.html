@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container my-5">
-    <h1 class="mb-4">Retour de l'emprunt n°{{ emprunt.id_emprunt }}</h1>
+    <h1 class="mb-4">Retour de l'emprunt : {{ emprunt.materiel.numero_materiel }} - {{ emprunt.materiel.nom_materiel }} - {{ emprunt.adherent.nom }}</h1>
     <form method="POST">
 
         <div class="card mb-4">

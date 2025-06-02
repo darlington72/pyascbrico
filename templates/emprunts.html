@@ -62,8 +62,16 @@
                             <td>{{ emprunt_reserve.materiel.numero_materiel }} - {{ emprunt_reserve.materiel.nom_materiel }}</td>
                             <td>{{ emprunt_reserve.adherent.prenom }} {{ emprunt_reserve.adherent.nom }}</td>
                             <td>
-                                <a href="{{ url_for('get_emprunt', id_emprunt=emprunt_reserve.id_emprunt) }}">Confirmer</a><br>
-                                <a href="{{ url_for('cancel_emprunt',id_emprunt=emprunt_reserve.id_emprunt) }}">Annuler</a>
+                                <!-- Formulaire de modification -->
+                                <form action="{{ url_for('get_emprunt', id_emprunt=emprunt_reserve.id_emprunt) }}" method="get">
+                                    <button type="submit" class="btn btn-primary">Confirmer</button>
+                                </form>
+                                <form method="POST" action="{{ url_for('cancel_emprunt',id_emprunt=emprunt_reserve.id_emprunt) }}" id="empruntForm">
+                                    <!-- Boutons de confirmation -->
+                                    <div class="d-flex justify-content-between">
+                                        <button type="submit" class="btn btn-danger">Annuler</button>
+                                    </div>
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}
