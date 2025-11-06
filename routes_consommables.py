@@ -49,3 +49,20 @@ def delete_consommable(id):
     db.session.delete(consommable)
     db.session.commit()
     return '', 204
+
+@app.route('/consommables/<int:id>/edit', methods=['GET', 'POST'])
+def modifier_consommable(id):
+    consommable = Consommable.query.get_or_404(id)
+
+    if request.method == 'POST':
+        consommable.nom_consommable = request.form['nom_consommable']
+        consommable.description = request.form['description']
+        consommable.quantite_disponible = request.form.get('quantite_disponible', type=int)
+        consommable.prix = request.form.get('prix', type=float)
+
+        db.session.commit()
+        flash('Consommable modifié avec succès !', 'success')
+        return redirect(url_for('get_consommables'))
+
+    # Si c’est un GET, on affiche le formulaire de modification
+    return render_template('modifier_consommable.html', consommable=consommable)

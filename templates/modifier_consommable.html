@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier le consommable : {{ consommable.nom_consommable }}{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+
+    <!-- Informations générales -->
+    <div class="card mb-4">
+        <div class="card-header">Informations Générales</div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="nom_consommable" class="form-label">Nom du Consommable *</label>
+                <input type="text" class="form-control" id="nom_consommable" name="nom_consommable"
+                       value="{{ consommable.nom_consommable }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3">{{ consommable.description }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="quantite_disponible" class="form-label">Quantité Disponible *</label>
+                <input type="number" class="form-control" id="quantite_disponible" name="quantite_disponible"
+                       value="{{ consommable.quantite_disponible }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="prix" class="form-label">Prix (€)</label>
+                <input type="number" step="0.01" class="form-control" id="prix" name="prix"
+                       value="{{ consommable.prix }}" required>
+            </div>
+        </div>
+    </div>
+
+    <!-- Détails complémentaires -->
+    <div class="card mb-4">
+        <div class="card-header">Détails Complémentaires</div>
+        <div class="card-body">
+            <p class="text-muted">Ajoutez ici toute information utile sur ce consommable (origine, conditions d’usage, stockage, etc.).</p>
+            <div class="mb-3">
+                <label for="infos_supp" class="form-label">Informations supplémentaires</label>
+                <textarea class="form-control" id="infos_supp" name="infos_supp" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bouton de soumission -->
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success">Confirmer la modification</button>
+    </div>
+
+</form>
+
+<a href="{{ url_for('get_consommables') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+
+{% endblock %}

@@ -4,18 +4,17 @@
 
 {% block content %}
 
-
 <div class="container mt-5">
 
-    <!-- Tableau des matériels -->
+    <!-- Tableau des consommables -->
     <table id="materielTable" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Nom</th>
                 <th>Description</th>
-                <th>Prix</th>
+                <th>Prix (€)</th>
                 <th>Quantité</th>
-                <!-- Ajoutez d'autres colonnes si nécessaire -->
+                <th>Actions</th> <!-- Nouvelle colonne -->
             </tr>
         </thead>
         <tbody>
@@ -25,11 +24,17 @@
                 <td>{{ consommable.description }}</td>
                 <td>{{ consommable.prix }}</td>
                 <td>{{ consommable.quantite_disponible }}</td>
+                <td class="text-center">
+                    <a href="{{ url_for('modifier_consommable', id=consommable.id_consommable) }}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-pencil-square"></i> Modifier
+                    </a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
+    <!-- Formulaire d’ajout -->
     <form action="{{ url_for('create_consommable') }}" method="post" class="container mt-5">
         <div class="card mb-4">
             <div class="card-header">Ajouter un consommable</div>
@@ -56,17 +61,18 @@
     </form>
 </div>
 
-
 <!-- Initialisation de DataTables -->
 <script>
     $(document).ready(function() {
-        // Initialisation de DataTables
-        var table = $('#materielTable').DataTable({
-            "paging": true,           // Pagination activée
-            "searching": true,        // Recherche en temps réel activée
-            "ordering": true,         // Tri activé
-            "info": true,             // Affichage de l'information de pagination
-            "lengthMenu": [200,100,50],  // Options de nombre d'éléments par page
+        $('#materielTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthMenu": [200, 100, 50],
+            "columnDefs": [
+                { "orderable": false, "targets": 4 } // Désactive le tri sur la colonne "Actions"
+            ]
         });
     });
 </script>
