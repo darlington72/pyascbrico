@@ -397,3 +397,47 @@ def remove_consommable(id_emprunt, consommable_id):
 
             return jsonify(success=True)  # Return a success message
     return jsonify(success=False), 400
+
+
+@app.route('/emprunts/<int:id_emprunt>/prolonger', methods=['POST'])
+def prolonger_emprunt(id_emprunt):
+    """Prolonge l'emprunt d'une semaine s'il n'y a pas de conflit."""
+    emprunt = Emprunt.query.filter_by(id_emprunt=id_emprunt).first()
+    if not emprunt:
+        flash("L'emprunt demandé n'existe pas.", "danger")
+        redirect(url_for('get_emprunts'))  # Redirection vers la page des emprunts
+
+    if emprunt.statut != Statut_Emprunt.en_cours:
+        flash("Impossible de prolonger : l'emprunt n'est pas en cours.", "danger")
+        return redirect(url_for('get_emprunts'))  # Redirection vers la page des emprunts
+
+    # Calcul de la date de fin actuelle et nouvelle date après prolongation
+    date_fin_actuelle = emprunt.date_debut + timedelta(weeks=emprunt.duree)
+    nouvelle_date_fin = date_fin_actuelle + timedelta(weeks=1)
+
+    # Vérifier les conflits avec d'autres emprunts (réservés ou en cours)
+    emprunts_conflits = Emprunt.query.filter(
+        Emprunt.id_materiel == emprunt.id_materiel,
+        Emprunt.id_emprunt != emprunt.id_emprunt,
+        Emprunt.statut.in_([Statut_Emprunt.en_cours, Statut_Emprunt.reserve])
+    ).all()
+
+    conflit = False
+    for e in emprunts_conflits:
+        date_debut_e = e.date_debut
+        date_fin_e = e.date_debut + timedelta(weeks=e.duree)
+        # Si les périodes se chevauchent
+        if (date_debut_e < nouvelle_date_fin.date() and date_fin_e > date_fin_actuelle.date()):
+            conflit = True
+            break
+
+    if conflit:
+        flash("Impossible de prolonger : le matériel est déjà réservé sur la période suivante.", "danger")
+        return redirect(url_for('get_emprunts'))  # Redirection vers la page des emprunts
+
+    # Aucun conflit → prolongation
+    emprunt.duree += 1
+    db.session.commit()
+
+    flash("Emprunt prolongé d'une semaine avec succès !", "success")
+    return redirect(url_for('get_emprunts'))  # Redirection vers la page des emprunts

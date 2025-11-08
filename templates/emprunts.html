@@ -30,8 +30,11 @@
                             <td>{{ emprunt_en_cours.adherent.prenom }} {{ emprunt_en_cours.adherent.nom }}</td>
                             <td>{{ emprunt_en_cours.date_debut }} - {{ emprunt_en_cours.duree }}s</td>
                             <td>
-                                <a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">Faire le retour</a><br>
-                                <a href="{{ url_for('get_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}">Détails</a>
+                                <a href="{{ url_for('retour_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}"><button type="submit" class="btn btn-success">Retour</button></a><br>
+                                <form action="{{ url_for('prolonger_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-primary">Prolonger</button>
+                                </form>
+                                <a href="{{ url_for('get_emprunt', id_emprunt=emprunt_en_cours.id_emprunt) }}"><button type="submit" class="btn btn-secondary">Détails</button></a>
                             </td>
                         </tr>
                     {% endfor %}
